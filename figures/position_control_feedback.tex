@@ -1,0 +1,43 @@
+\documentclass[tikz,14pt,border=10pt]{standalone}
+
+\usepackage{verbatim}
+
+\usepackage{textcomp}
+\usetikzlibrary{shapes,arrows,positioning}
+\usetikzlibrary{calc,patterns,decorations.pathmorphing,decorations.markings}
+\begin{document}
+% Definition of blocks:
+\tikzset{%
+  block/.style    = {draw, thick, rectangle, minimum height = 4em,
+    minimum width = 4em},
+  sum/.style      = {draw, circle, node distance = 2cm}, % Adder
+  input/.style    = {coordinate}, % Input
+  output/.style   = {coordinate}, % Output
+  anch/.style   = {coordinate} % Anchor
+}
+% Defining string as labels of certain blocks.
+\newcommand{\suma}{}
+
+\begin{tikzpicture}[auto, thick, node distance=2cm, >=triangle 45]
+  \draw
+  node[input, name = fdes] {}
+  node[sum, right= 1cm of fdes] (sum1) {\suma}
+  node[block, right = 1cm of sum1] (ze) {\Large $Z_e$}
+  node[sum, right= 1cm of ze] (sum2) {\suma}
+  node[input, above= 1cm of sum2, name = fenv] {}
+  node[block, below = 1cm of sum2.center] (zm_inverse) {\Large $Z_m^{-1}$}
+  node[output, right = 2.5cm of sum2] (F) {}
+  node[anch, right = 1.5cm  of sum2](anchor1){}
+  ;
+
+  \draw[->, thin](fdes) -- node [pos=0]{\Large $v_{des}$}(sum1);
+  \draw[->, thin](sum1) -- node [pos=0.4]{\Large $v$}(ze);
+  \draw[->, thin](ze) -- node [pos=0.3]{}(sum2);
+  \draw[->, thin](fenv) -- node [pos=0]{\Large $-F_{env}$}(sum2);
+  %% \draw[->, thin](sum2) -- node[pos=0.3]{}(ze);
+  \draw[->, thin](sum2) -- node[pos = 0.7]{\Large $F$}(F);
+  \draw[->, thin](zm_inverse.west) -| node[pos=0.97] {$-$}(sum1);
+  \draw[->, thin](anchor1) |- (zm_inverse.east);
+\end{tikzpicture}
+\end{document}
+
