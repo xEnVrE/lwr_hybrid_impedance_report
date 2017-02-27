@@ -210,7 +210,6 @@
 
 \begin{frame}
   \frametitle{Hybrid Impedance control}
-  \framesubtitle{Combinig the subsytems}
   \begin{equation*}
     \vec{a} = S 
     \begin{bmatrix}
@@ -235,10 +234,14 @@
       a_{f,x} & a_{f,y} & a_{f,z} & a_{f, \psi} & a_{f, \theta} & a_{f, \phi}
     \end{bmatrix}^T
   \end{equation*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Hybrid Impedance control}
   \begin{align*}
-    & a_x = \ddot{x}_{des} + B_p (\dot{x}_{des} - \dot{x}) + K_p (x_{des} - x) - F_x \\
-    & a_y = \ddot{y}_{des} + B_p (\dot{y}_{des} - \dot{y}) + K_p (y_{des} - y) - F_y \\
-    & a_z= M_f^{-1}((f_{des} - f) - B_f \dot{x}_z) \\
+    & a_x = \ddot{r}_{x,des} + B_x (\dot{r}_{x,des} - \dot{r}_x) + K_x (r_{x,des} - r_x) - F_x \\
+    & a_y = \ddot{r}_{y,des} + B_y (\dot{r}_{y,des} - \dot{r}_y) + K_y (r_{y,des} - r_y) - F_y \\
+    & a_z = - B_f \dot{r}_z + K_f(F_{z,des} - F_z) \\
     & a_{\psi} = - B_{\psi} \dot{\psi} + K_{\psi} (\psi_{des} - \psi) \\
     & a_{\theta} = - B_{\theta} \dot{\theta} + K_{\theta} (\theta_{des} - \theta) \\
     & a_{\phi} = - B_{\phi} \dot{\phi} + K_{\phi} (\phi_{des} - \phi)
