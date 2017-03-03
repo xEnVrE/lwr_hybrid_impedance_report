@@ -1,0 +1,58 @@
+\documentclass[tikz,14pt,border=10pt]{standalone}
+
+\usepackage{verbatim}
+
+\usepackage{textcomp}
+\usepackage{amsmath}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+\usetikzlibrary{shapes,arrows,positioning}
+\usetikzlibrary{calc,patterns,decorations.pathmorphing,decorations.markings}
+\begin{document}
+% Definition of blocks:
+\tikzset{%
+  block_s/.style    = {draw, thick, rectangle, minimum height = 3em,
+    minimum width = 3em},
+  block_b/.style    = {draw, thick, rectangle, minimum height = 3em,
+    minimum width = 8em},
+  sum/.style      = {draw, circle, node distance = 2cm}, % Adder
+  input/.style    = {coordinate}, % Input
+  output/.style   = {coordinate}, % Output
+  anch/.style   = {coordinate} % Anchor
+}
+% Defining string as labels of certain blocks.
+\newcommand{\suma}{}
+
+\begin{tikzpicture}[auto, thick, node distance=2cm, >=triangle 45]
+  \draw
+  node[input, name = twist_alt]  
+  node[block_s, right = 1 cm of twist_alt] (k_inverse){$K^{-1}$}
+  node[sum, right = 1cm of k_inverse] (sum1){\suma}
+  node[block_b, right = 1cm of sum1] (projector) {$B (B^{T} B)^{-1} B ^{T}$}
+  node[block_s, right = 1cm of projector] (posctl) {Position control}
+  node[sum, below = 1cm of posctl] (sum2) {}
+  node[block_s, right = 1cm of sum2] (robot) {Robot}
+  node[block_s, above = 0.5cm of projector] (transform) {${}^{C} T_{\vec{q}}$}
+  node[output, right = 1 cm of robot] (q) {}
+  node[input, below = 0.5cm of sum2] (wrench_ctl) {}
+  ;
+  \draw[->, thin] (twist_alt) -- node[pos=0]{$\boldsymbol{\xi}_d'$}(k_inverse);
+  \draw[->, thin] (k_inverse) -- node[pos=0.4]{$\boldsymbol{\xi}_d$}(sum1);
+  \draw[->, thin] (sum1) -- (projector);
+  \draw[->, thin] (projector) -- (posctl);
+  \draw[->, thin] (posctl.south) -- (sum2);
+  \draw[->, thin] (wrench_ctl) -- (sum2);
+  \draw[->, thin] (sum2) -- (robot.west);
+  \draw[->, thin] (robot) |- node[pos=0.05, right = 0.05cm of robot]{$\vec{q}$} (transform);
+  \draw[->, thin] (transform) -| node[near end]{$\boldsymbol{\xi}$} node[pos=0.9]{$-$}(sum1);
+  %% \draw[->, thin](r) -- node [pos=0]{\Large $r$}(sum1);
+  %% \draw[->, thin](sum1) -- node [pos=0.4]{\Large $e$}(controller);
+  %% \draw[->, thin](controller) -- node [pos=0.3]{\Large $u$}(sum2);
+  %% \draw[->, thin](w) -- node [pos=0]{\Large $w$}(sum2);
+  %% \draw[->, thin](sum2) -- node[pos=0.3]{\Large $u_p$}(plant);
+  %% \draw[->, thin](plant) -- node[pos = 0.7]{\Large $y$}(y);
+  %% \draw[->, thin](n) -- node[pos=0]{\Large$n$}(sum3);
+  %% \draw[->, thin](anchor1) -- (sum3);
+  %% \draw[->, thin](sum3) -| node[pos=0.97] {$-$}(sum1);
+
+\end{tikzpicture}
+\end{document}
