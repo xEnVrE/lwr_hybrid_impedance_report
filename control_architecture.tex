@@ -4,13 +4,15 @@
   \begin{itemize}
   \item [-] hybrid force/position control
     \begin{itemize}
-    \item[] allows to assign different control strategies to each cartesian DoF
-      (position and orientation of the end effector)
+    \item[] \textcolor{dgreen}{pros:}allows to assign different control strategies to each cartesian DoF
+      intuitively via a selection matrix
+    \item[] \textcolor{red}{cons:} no importance to manipulator impedance as seen by the environment
     \end{itemize}
   \item [-] impedance control
     \begin{itemize}
-    \item[] allows to control the compliance of the end effector with the environment
+    \item[] \textcolor{dgreen}{pros:}considers the effects of impedance on robot/environment interactions
+    \item[] \textcolor{red}{cons:}force is controlled indirectly and a force trajectory can not be assigned
     \end{itemize}
-  \item [-] requires {\color{red}operational space} description and control
+  \item [-] HIC combines both approaches into one strategy
   \end{itemize}
 \end{frame}
