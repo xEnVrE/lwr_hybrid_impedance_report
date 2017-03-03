@@ -6,6 +6,8 @@
 \usepackage{amsmath}
 \usepackage{manfnt}
 \usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{dgreen}{rgb}{0.,0.6,0.}
 
 \graphicspath{ {figures/} }
 
@@ -13,7 +15,7 @@
 \newcommand{\vecg}[1]{\mathbold{#1}}
 \newcommand{\matr}[1]{\mathbf{#1}}
 
-\date{9/03/2017}
+\date{xy/03/2017}
 
 \title[Hybrid Impedance Control]{Hybrid Impedance Control of a Kuka LWR 4+}
 \subtitle{Corso di Laurea Magistrale in Ingegneria Robotica ed Automazione \\
@@ -27,11 +29,28 @@
 \begin{frame}
   \maketitle
   \centering
-  \includegraphics[width=20mm]{cherubino}
+  \begin{columns}
+    \begin{column}{0.4\columnwidth}
+    \end{column}
+    \begin{column}{0.265\columnwidth}
+      \centering
+      \includegraphics[width=20mm]{cherubino}
+    \end{column}
+    \begin{column}{0.6\columnwidth}
+      \vskip.1in
+      \hskip.3in
+      Supervisors:\\
+      \hskip.3in
+      Prof. Antonio Bicchi\\
+      \hskip.3in
+      Ing. Manuel Bonilla\\
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \input{task_description.tex}
 \input{control_architecture.tex}
 \input{frames_reference.tex}
 \input{hybrid_impedance.tex}
+\input{kinestatic_filtering.tex}
 \end{document}
