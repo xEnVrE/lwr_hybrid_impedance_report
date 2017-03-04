@@ -1,0 +1,22 @@
+\begin{frame}
+  \frametitle{Control of internal motions}
+  \begin{itemize}
+  \item[-] kinematically redundant 7 DoFs manipulator
+  \item[-] additional control of the position of the 4-th link
+  \item[-] use of a \emph{dynamically consistent} generalized inverse of $J$ to filter the additional control [Khatib]
+    
+  \end{itemize}
+  \begin{flalign*}
+    &\hat{J} = B^{-1} J^{T} \Lambda\\
+    &\hat{J}^{T} (B \ddot{\vec{q}} + C \dot{\vec{q}}) = \hat{J}^{T} \boldsymbol{\tau} = \Lambda\ddot{\vec{x}} + \boldsymbol{\mu}\\
+    &\vec{\tau} = C \dot{\vec{q}} + J^{T}_{F} (\vec{\gamma_{ee}} + \vec{w}_{F}) +
+    (I_7 - J^{T}_{F}\hat{J}^{T})\vec{\gamma_0}\\
+    &\vec{\gamma_0} = J_{a_4}^{T}(K_p (\vec{x}_{a_4,des} - \vec{x}_{a_4}) - K_d \dot{\vec{x}}_{a_4})\\
+    &\vec{x}_{a_4,des} = \begin{bmatrix} \frac{x_{ee}}{2} & 0 & z_{ee} + z_{offset} \end{bmatrix}^{T}
+  \end{flalign*}
+  %% The manipulator is kinematically redundant because it possesses $7$ DoFs that are more
+  %% than needed to execute the task assigned to the end effector.\\
+  %% In order to control the position of the 4-th link an additional controller is used 
+  %% whose contribution is filtered out to obtain a \emph{null force operational torque vector} $\boldsymbol{\tau}_0$.
+  %% \emph{null operational} torque vector
+\end{frame}
