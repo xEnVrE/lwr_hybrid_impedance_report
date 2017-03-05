@@ -8,12 +8,16 @@
 \usepackage{graphicx}
 \usepackage[dvipsnames]{xcolor}
 \definecolor{dgreen}{rgb}{0.,0.6,0.}
+\usepackage{amssymb}
+\usepackage{pifont}
 
 \graphicspath{ {figures/} }
 
 \renewcommand{\vec}[1]{\boldsymbol{#1}}
 \newcommand{\vecg}[1]{\mathbold{#1}}
 \newcommand{\matr}[1]{\mathbf{#1}}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
 
 \date{xy/03/2017}
 
@@ -55,4 +59,6 @@
 \input{kinestatic_filtering.tex}
 \input{redundant_manipulator.tex}
 \input{cartesian_position.tex}
+\input{simulation_setup.tex}
+\input{experimental_setup.tex}
 \end{document}
