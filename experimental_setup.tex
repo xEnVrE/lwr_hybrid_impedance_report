@@ -22,7 +22,7 @@
   \end{flalign*}
   
   \begin{itemize}
-    \item[-] masses, inertias and CoM of links are not extact:
+    \item[-] masses, inertias and CoM of links are not exact:
       \begin{itemize}
       \item[-] $B$ given by FRI {\color{dgreen}\cmark}
       \item[-] $C \dot{\vec{q}}$ neglected {\color{red}\xmark}
@@ -40,7 +40,7 @@
       \item[-] $\vec{w}_F = \vec{w}_{ideal} + \vec{w}_{offs}$ (offset not yet estimated) {\color{red}\xmark}
       \item[-] problems with light sensitivity! {\color{dgreen}\cmark}
     \end{itemize}
-    \item[-] friction {\color{red}\xmark}
+    \item[-] friction not compensated in control laws {\color{red}\xmark}
   \end{itemize}
 \end{frame}
 
@@ -48,8 +48,8 @@
   \frametitle{Experimental setup}
   \framesubtitle{Approaching phase}
   \begin{itemize}
-  \item[-] initial configuration: 
-  \item[-] final configuration: 
+  \item[-] initial configuration: $\begin{bmatrix} -0.91 & 0.24 & 0.24 & 2.21 & 0.36 &-2.90 \end{bmatrix}$
+  \item[-] final configuration: $\begin{bmatrix} -0.7 & 0.04 & 0.16 & 2.96 & 0.11 &-2.69 \end{bmatrix}$
   \item[-] duration $5$s
   \item[-] $K_p = \mathrm{diag}(1600)$
   \item[-] $K_d = \mathrm{diag}(30)$
