@@ -1,0 +1,47 @@
+\documentclass[a4paper,12pt]{article}
+\author{}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{blkarray}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{commath}
+\usepackage[english]{cleveref}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{arydshln}
+\usepackage[toc,page]{appendix}
+%
+\usepackage[group-digits = false]{siunitx}
+\usepackage[T1]{fontenc}
+\DeclareSIUnit[number-unit-product = {}]{\inchQ}{\textquotedbl}
+%
+\usepackage{fixmath}
+\usepackage{float}
+\usepackage{enumerate}
+
+%\usepackage{booktabs}
+%, style=alphabetic, %style=reading
+
+\graphicspath{ {figures/} }
+
+%\renewcommand{\vec}[1]{\underline{#1}}
+%\renewcommand{\vec}[1]{\mathbf{#1}}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+\newcommand{\matr}[1]{\boldsymbol{#1}}
+\newcommand{\unitvec}[1]{\hat{\mathbf{#1}}}
+\newtheorem*{theorem}{Theorem}
+
+\begin{document}
+
+\tableofcontents
+
+\input{force.tex}
+
+%% \newpage
+%% \nocite{*}
+%% \bibliography{biblio}
+%% \bibliographystyle{ieeetr}
+
+\end{document}

@@ -1,0 +1,19 @@
+\begin{frame}
+  \frametitle{Software implementation}
+
+  \begin{itemize}
+  \item[-] ROS
+  \item[-] already existing (Centro Piaggio) KUKA LWR4+ software stack (model, FRI, KRL, ati sensor, ROS controllers)
+  \item[-] built upon KinematicChainControllerBase (KDL facilities)
+  \item[-] extends KinematicChainControllerBase by providing an Operational Space Inverse Dynamics \emph{abstract} controller
+    \begin{itemize}
+    \item[-] arbitrary commanded acceleration in operational space
+    \item[-] state (with derivatives) ready to use and projected in $ws$
+    \item[-] jacobian extended to take into account the length of the tool
+    \item[-] null projection available
+    \end{itemize}
+  \item[-] Hybrid Impedance Controller based on Inverse Dynamics Controller
+  \item[-] joint space inertia matrix from FRI made available
+  \end{itemize}
+
+\end{frame}

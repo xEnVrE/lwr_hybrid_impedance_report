@@ -1,0 +1,159 @@
+\section{Measure of the contact forces and torques}
+In the previous sections the hybrid force-position control architecture was described
+and the assumption was made that the wrench $\vec{F}_{ee, env}$ exerted by the end effector on the environment
+was available as a feedback signal.
+\par
+In this section it is explained how such a wrench can be obtained starting from the \emph{raw} signal
+coming from a common force/torque sensor and what are the main problems encountered in doing that.
+
+\subsection{Newton-Euler equations}
+In order to understand what are the actual quantities measured by a force/torque sensor it is useful
+to describe, by means of the Newton-Euler approach, the motion of a rigid body, attached to the
+sensor through a mounting plate, due to external forces and torques. The resulting equations are the following
+
+\begin{equation}
+  {}^S \vec{f}_{s} = -{}^S \vec{f}_{pl} -{}^S \vec{f}_{c} -m {}^S \vec{g} + m {}^S \vec{a}_{cm}
+\end{equation}
+\begin{equation}\label{eq:ne_torque_1}
+  {}^S \vec{\tau}_{s} = -{}^S \vec{\tau}_{pl} -{}^S \vec{\tau}_{c} -{}^S \hat{\vec{p}}_{c} {}^S \vec{f}_{c}
+  +{}^S \hat{\vec{g}} m{}^S\vec{c} - {}^S \hat{\vec{a}}_{cm} m {}^S \vec{c} + {}^S I_{cm} {}^S\vec{\alpha} 
+  +{}^S \hat{\vec{\omega}} {}^S I_{cm} {}^S \vec{\omega}
+\end{equation}
+where $S$ denotes a reference frame fixed to the sensor body, as introduced in (cite prev sections),
+$\vec{f}_{s}$ and $\vec{\tau}_{s}$ are the forces and torques exerted by the sensor on the rigid body,
+$\vec{f}_{pl}$ and $\vec{\tau}_{pl}$ are due to the mounting plate,
+$\vec{f}_{c}$ and $\vec{\tau}_{c}$ are the \emph{external} forces and torques exerted on the rigid body in the interaction
+with the environment,
+$\vec{c}$ is the vector from the wrist of the robot to the CoM of the rigid body,
+$\vec{p}_{c}$ is the vector from wrist of the robot to the contact point with the environment,
+$I_{cm}$ is the inertia matrix of the rigid body with respect to the CoM,
+$\vec{g}$ is the gravity vector, $\vec{a}_{cm}$ is the linear acceleration of the CoM of the rigid body,
+$\vec{\omega}$ is the angular velocity of the rigid body and
+$\vec{\alpha}$ is the angular acceleration of the rigid body.
+\par
+It should be noted that the wrench $\vec{F}_{ee,env}$ with reference point in the contact point with the environment is given by
+$\begin{bmatrix}
+  & -\vec{f}_{c} ^T & - \vec{\tau}_{c} ^ T \\
+\end{bmatrix}^T$
+and that all the torques in equation (\ref{eq:ne_torque_1}) are expressed with the reference point in the wrist
+of the robot where the sensor is mounted.
+\par
+Since in this project the force/torque sensor is primarily used to control the contact force when the end effector
+is still or when it moves along straight lines the angular velocity and the angular acceleration of the end effector
+attached to the sensor can be neglected leading to the equations
+\begin{equation}\label{eq:ne_force_2}
+   \vec{f}_{s} = - \vec{f}_{pl} - \vec{f}_{c} -m  \vec{g} + m  \vec{a}_{cm}
+\end{equation}
+\begin{equation}\label{eq:ne_torque_2}
+   \vec{\tau}_{s} = - \vec{\tau}_{pl} - \vec{\tau}_{c} - \hat{\vec{p}}_{c}  \vec{f}_{c}
+  + \hat{\vec{g}} m\vec{c} -  \hat{\vec{a}}_{cm} m  \vec{c}
+\end{equation}
+
+\subsection{Software induced offset}
+The hardware of the force/torque sensor is built in a such way that the forces and torques exchanged
+with the rigid body attached to it are measured. With reference to the equations (\ref{eq:ne_force_2})
+and (\ref{eq:ne_torque_2}) the signal produced by the sensor can be written as
+
+\begin{equation*}
+  \vec{f}_{m} = -\vec{f}_{s} + \vec{f}_{sw,off}
+\end{equation*}
+\begin{equation*}
+  \vec{\tau}_{s} = -\vec{\tau}_{s} + \vec{\tau}_{sw,off}
+\end{equation*}
+where $\vec{f}_{sw, off}$ and $\vec{\tau}_{sw,off}$ represent the offset introduced by
+the sensor when the user activates the \emph{calibration} of the sensor. This operation
+is performed when the sensor is \emph{still} and not in contact with the environment
+and the resulting offset is chosen such that $\vec{f}_{m,0} = \vec{\tau}_{m,0} = \vec{0}$
+where the zero subscript represents the calibration condition. Simple substitutions show that
+\begin{equation*}
+\vec{f}_{sw,off} = \vec{f}_{s,0} = -\vec{\tau}_{pl} -m {}^S \vec{g}_{0}
+\end{equation*}
+\begin{equation*}
+\vec{\tau}_{sw,off} = \vec{\tau}_{s,0} = -\vec{\tau}_{pl} + {}^S \hat{\vec{g}_{0}} m\vec{c}
+\end{equation*}
+where $\vec{g}_{0}$ is the value assumed by the gravity expressed in the sensor frame $S$ at the
+moment of the calibration.
+\par
+Taking into account the expressions of the offset the measured forces and torques in absence of angular
+motions can be written as
+\begin{equation}\label{eq:m_force_2}
+  \vec{f}_{m} = \vec{f}_{c} +m \vec{g} -m {}^S \vec{g}_{0} - m  \vec{a}_{cm}
+\end{equation}
+\begin{equation}\label{eq:m_torque_2}
+  \vec{\tau}_{m} = \vec{\tau}_{c} + \hat{\vec{p}}_{c}  \vec{f}_{c}
+  - \hat{\vec{g}} m\vec{c} + {}^S \hat{\vec{g}_{0}} m\vec{c} +  \hat{\vec{a}}_{cm} m  \vec{c}
+\end{equation}
+\par
+As suggested by the previous formulas in order to obtain the part of the measure related to the contact
+with the environment it is required to estimate the mass of the rigid body $m$, the position of the centre of
+mass with respect to the wrist $\vec{c}$ and the offsets $-m {}^S \vec{g}_{0}$ and ${}^S \hat{\vec{g}_{0}} m\vec{c}$.
+The gravity ${}^S \vec{g}$ expressed in sensor frame can be obtained using the direct kinematics software facilities
+developed for the project while the linear acceleration $\vec{a}_{cm}$ can be obtained using an appropriate
+jacobian, its derivative and an estimate of the angular velocities and accelerations of the joints
+of the robot.
+
+\subsection{Estimation of parameters and offsets}
+Since all the quantities to be estimated are revealed even when the sensor is still
+it is possible to estimate them by acquiring a certain number of measures each when
+the robot, hence the sensor, assumes a static pose. The estimation can be obtained
+from the measures using a \emph{linear} least squares approach since there exist
+a linear relationship between the measurements and the parameters
+
+\begin{equation*}
+  \begin{flalign*}
+    \begin{bmatrix}
+      \vec{f}_{m} \\
+      \vec{\tau}_{m} \\
+    \end{bmatrix} &=
+    \begin{bmatrix}
+      \vec{g} m + (-m {}^S \vec{g}_{0}) \\
+      -\hat{\vec{g}} m\vec{c} + ({}^S \hat{\vec{g}_{0}} m\vec{c}) \\
+    \end{bmatrix}\\
+    & =
+    \begin{bmatrix}
+      \vec{g} & 0_{3 \times 3} & I_{3x3} & 0_{3x3} \\
+      \vec{0} & -\hat{\vec{g}} & 0_{3x3} & I_{3x3}
+    \end{bmatrix}
+    \begin{bmatrix}
+      m \\
+      m \vec{c} \\
+      -m {}^S \vec{g}_{0} \\
+      {}^S \hat{\vec{g}_{0}} m\vec{c} \\
+    \end{bmatrix}\\
+    &=
+    H({}^S \vec{g}) \vec{\theta}
+  \end{flalign*}
+\end{equation*}
+where ${}^S \vec{g} = {}^S \vec{g(\vec{q})}$ depends on the configuration $\vec{q}$ of the robot.
+\par
+Given n configurations of the robot the estimate is given by
+\begin{equation*}
+  \begin{flalign*}
+    \hat{\vec{\theta}} &=
+    \begin{bmatrix}
+      H(\vec{q}^{1})\\
+      \vdots \\
+      H(\vec{q}^{n})\\
+    \end{bmatrix}^{+}
+    \begin{bmatrix}
+      \vec{f}_{m}^{1} \\
+      \vec{\tau}_{m}^{1} \\
+      \vdots \\
+      \vec{f}_{m}^{n} \\
+      \vec{\tau}_{m}^{n} \\
+    \end{bmatrix}
+    =
+    H_n^{+}
+    \begin{bmatrix}
+      \vec{f}_{m}^{1} \\
+      \vec{\tau}_{m}^{1} \\
+      \vdots \\
+      \vec{f}_{m}^{n} \\
+      \vec{\tau}_{m}^{n} \\
+    \end{bmatrix}\\
+  \end{flalign*}
+\end{equation*}
+where it can be shown that for $n \ge 3$ the matrix $H_n$ is always full column rank.
+
+
+
