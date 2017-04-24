@@ -15,9 +15,9 @@ sensor through a mounting plate, due to external forces and torques. The resulti
   {}^S \vec{f}_{s} = -{}^S \vec{f}_{pl} -{}^S \vec{f}_{c} -m {}^S \vec{g} + m {}^S \vec{a}_{cm}
 \end{equation}
 \begin{equation}\label{eq:ne_torque_1}
-  {}^S \vec{\tau}_{s} = -{}^S \vec{\tau}_{pl} -{}^S \vec{\tau}_{c} -{}^S \hat{\vec{p}}_{c} {}^S \vec{f}_{c}
-  +{}^S \hat{\vec{g}} m{}^S\vec{c} - {}^S \hat{\vec{a}}_{cm} m {}^S \vec{c} + {}^S I_{cm} {}^S\vec{\alpha} 
-  +{}^S \hat{\vec{\omega}} {}^S I_{cm} {}^S \vec{\omega}
+  {}^S \vec{\tau}_{s} = -{}^S \vec{\tau}_{pl} -{}^S \vec{\tau}_{c} -{}^S \tilde{\vec{p}}_{c} {}^S \vec{f}_{c}
+  +{}^S \tilde{\vec{g}} m{}^S\vec{c} - {}^S \tilde{\vec{a}}_{cm} m {}^S \vec{c} + {}^S I_{cm} {}^S\vec{\alpha} 
+  +{}^S \tilde{\vec{\omega}} {}^S I_{cm} {}^S \vec{\omega}
 \end{equation}
 where $S$ denotes a reference frame fixed to the sensor body, as introduced in (cite prev sections),
 $\vec{f}_{s}$ and $\vec{\tau}_{s}$ are the forces and torques exerted by the sensor on the rigid body,
@@ -45,8 +45,8 @@ attached to the sensor can be neglected leading to the equations
    \vec{f}_{s} = - \vec{f}_{pl} - \vec{f}_{c} -m  \vec{g} + m  \vec{a}_{cm}
 \end{equation}
 \begin{equation}\label{eq:ne_torque_2}
-   \vec{\tau}_{s} = - \vec{\tau}_{pl} - \vec{\tau}_{c} - \hat{\vec{p}}_{c}  \vec{f}_{c}
-  + \hat{\vec{g}} m\vec{c} -  \hat{\vec{a}}_{cm} m  \vec{c}
+   \vec{\tau}_{s} = - \vec{\tau}_{pl} - \vec{\tau}_{c} - \tilde{\vec{p}}_{c}  \vec{f}_{c}
+  + \tilde{\vec{g}} m\vec{c} -  \tilde{\vec{a}}_{cm} m  \vec{c}
 \end{equation}
 
 \subsection{Software induced offset}
@@ -69,7 +69,7 @@ where the zero subscript represents the calibration condition. Simple substituti
 \vec{f}_{sw,off} = \vec{f}_{s,0} = -\vec{\tau}_{pl} -m {}^S \vec{g}_{0}
 \end{equation*}
 \begin{equation*}
-\vec{\tau}_{sw,off} = \vec{\tau}_{s,0} = -\vec{\tau}_{pl} + {}^S \hat{\vec{g}_{0}} m\vec{c}
+\vec{\tau}_{sw,off} = \vec{\tau}_{s,0} = -\vec{\tau}_{pl} + {}^S \tilde{\vec{g}_{0}} m\vec{c}
 \end{equation*}
 where $\vec{g}_{0}$ is the value assumed by the gravity expressed in the sensor frame $S$ at the
 moment of the calibration.
@@ -80,13 +80,12 @@ motions can be written as
   \vec{f}_{m} = \vec{f}_{c} +m \vec{g} -m {}^S \vec{g}_{0} - m  \vec{a}_{cm}
 \end{equation}
 \begin{equation}\label{eq:m_torque_2}
-  \vec{\tau}_{m} = \vec{\tau}_{c} + \hat{\vec{p}}_{c}  \vec{f}_{c}
-  - \hat{\vec{g}} m\vec{c} + {}^S \hat{\vec{g}_{0}} m\vec{c} +  \hat{\vec{a}}_{cm} m  \vec{c}
+  \vec{\tau}_{m} = \vec{\tau}_{c} + \tilde{\vec{p}}_{c}  \vec{f}_{c}
+  - \tilde{\vec{g}} m\vec{c} + {}^S \tilde{\vec{g}_{0}} m\vec{c} +  \tilde{\vec{a}}_{cm} m  \vec{c}
 \end{equation}
-\par
 As suggested by the previous formulas in order to obtain the part of the measure related to the contact
 with the environment it is required to estimate the mass of the rigid body $m$, the position of the centre of
-mass with respect to the wrist $\vec{c}$ and the offsets $-m {}^S \vec{g}_{0}$ and ${}^S \hat{\vec{g}_{0}} m\vec{c}$.
+mass with respect to the wrist $\vec{c}$ and the offsets $-m {}^S \vec{g}_{0}$ and ${}^S \tilde{\vec{g}_{0}} m\vec{c}$.
 The gravity ${}^S \vec{g}$ expressed in sensor frame can be obtained using the direct kinematics software facilities
 developed for the project while the linear acceleration $\vec{a}_{cm}$ can be obtained using an appropriate
 jacobian, its derivative and an estimate of the angular velocities and accelerations of the joints
@@ -107,18 +106,18 @@ a linear relationship between the measurements and the parameters
     \end{bmatrix} &=
     \begin{bmatrix}
       \vec{g} m + (-m {}^S \vec{g}_{0}) \\
-      -\hat{\vec{g}} m\vec{c} + ({}^S \hat{\vec{g}_{0}} m\vec{c}) \\
+      -\tilde{\vec{g}} m\vec{c} + ({}^S \tilde{\vec{g}_{0}} m\vec{c}) \\
     \end{bmatrix}\\
     & =
     \begin{bmatrix}
       \vec{g} & 0_{3 \times 3} & I_{3x3} & 0_{3x3} \\
-      \vec{0} & -\hat{\vec{g}} & 0_{3x3} & I_{3x3}
+      \vec{0} & -\tilde{\vec{g}} & 0_{3x3} & I_{3x3}
     \end{bmatrix}
     \begin{bmatrix}
       m \\
       m \vec{c} \\
       -m {}^S \vec{g}_{0} \\
-      {}^S \hat{\vec{g}_{0}} m\vec{c} \\
+      {}^S \tilde{\vec{g}_{0}} m\vec{c} \\
     \end{bmatrix}\\
     &=
     H({}^S \vec{g}) \vec{\theta}
@@ -153,7 +152,14 @@ Given n configurations of the robot the estimate is given by
     \end{bmatrix}\\
   \end{flalign*}
 \end{equation*}
-where it can be shown that for $n \ge 3$ the matrix $H_n$ is always full column rank.
-
-
-
+where it can be shown that for $n \ge 3$ the matrix $H_n$ is always full column rank
+so that $H_n^{+} = H_n(H_n^{T} H_n)^{-1}$.
+Once the estimate is computed contact forces and torques can be evaluted as
+\begin{equation*}
+  \hat{\vec{f}}_c = \vec{f}_m - \hat{\theta}_{1} \vec{g} - \hat{\vec{\theta}}_{5:7} + \hat{\theta}_{1} \hat{\vec{a}}_{cm}(\vec{q},\vec{\dot{q}},\vec{\ddot{q}})
+\end{equation*}
+\begin{equation*}
+  \hat{\vec{\tau}}_c + \tilde{\vec{p}}_{c}  \hat{\vec{f}}_{c} = \vec{\tau}_m
+    + \tilde{\vec{g}} \hat{\vec{\theta}}_{2:4} - \hat{\vec{\theta}}_{8:10} -  \tilde{\hat{\vec{a}}}_{cm}}(\vec{q},\vec{\dot{q}},\vec{\ddot{q}}) \hat{\vec{\theta}}_{2:4}
+\end{equation*}
+where $\hat{\vec{a}}_{cm}$ is an estimate of the linear acceleration of the centre of mass of the rigid body.
