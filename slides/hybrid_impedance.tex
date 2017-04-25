@@ -286,8 +286,8 @@
     & a_x = \ddot{r}_{x,des} + B_x (\dot{r}_{x,des} - \dot{r}_x) + K_x (r_{x,des} - r_x) - F_x \\
     & a_y = \ddot{r}_{y,des} + B_y (\dot{r}_{y,des} - \dot{r}_y) + K_y (r_{y,des} - r_y) - F_y \\
     & a_z = - B_f \dot{r}_z + K_f(F_{z,des} - F_z) \\
-    & a_{\psi} = - B_{\psi} \dot{\psi} + K_{\psi} (\psi_{des} - \psi) \\
-    & a_{\theta} = - B_{\theta} \dot{\theta} + K_{\theta} (\theta_{des} - \theta) \\
-    & a_{\phi} = - B_{\phi} \dot{\phi} + K_{\phi} (\phi_{des} - \phi)
+    & a_{\psi} = \ddot{\psi}_{des} + B_{\psi}(\dot{\psi}_{des} - \dot{\psi}) + K_{\psi} (\psi_{des} - \psi) \\
+    & a_{\theta} = \ddot{\theta}_{des} + B_{\theta}(\dot{\theta}_{des} - \dot{\theta}) + K_{\theta} (\theta_{des} - \theta) \\
+    & a_{\phi} = \ddot{\phi}_{des} + B_{\phi}(\dot{\phi}_{des} - \dot{\phi}) + K_{\phi} (\phi_{des} - \phi) \\
   \end{align*}
 \end{frame}
