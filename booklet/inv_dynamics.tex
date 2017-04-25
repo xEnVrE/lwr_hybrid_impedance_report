@@ -1,0 +1,244 @@
+\section{Inverse Dynamics Inner Loop}
+In the previous section the hybrid force position control scheme was described
+with the assumption that an inverse dynamics inner loop was available. In this
+section the inverse dynamics controller is described and the issue of controlling
+a kinematically redudant manipulator is discussed.
+
+\subsection{Design of the inverse dynamics controller}
+The development of the controller starts from the dynamic model of the 7-joint
+manipulator
+\begin{equation}\label{eq:joint_space_dyn}
+  B(\vec{q}) \ddot{\vec{q}} + C(\vec{q}, \dot{\vec{q}}) \dot{\vec{q}} + \cancel{\vec{G}(\vec{q})} = \vec{\tau}
+  -\prescript{b}{}{J}^{T}_{F} \prescript{b}{}{\vec{w}}_{F}
+\end{equation}
+
+where $\vec{w}_{F}$ is the wrench exerted by the end-effector on the environment with reference point in the centre
+of the wrist of the robot ($F$) and $J_{F}$ is the geometric Jacobian of the robot.
+The gravity term is canceled because it is handled internally by the robot itself.
+\par
+The first step towards the exact dynamics inversion is to cancel the Coriolis term
+$C \dot{\vec{q}}$ and the term containing the wrench $\vec{w}_{F}$ which is supposed to
+be available as a feedback signal. The resulting control torque is then
+\begin{equation*}
+  \vec{\tau} = C \dot{\vec{q}} + {}^{b}J^{T}_{F} ({}^b\vec{\gamma} + {}^b\vec{w}_{F})
+\end{equation*}
+where an additional control wrench $\vec{\gamma}$ is introduced.
+Substituing the control torque and solving for the joints accelerations $\vec{\ddot{q}}$
+leads to
+\begin{equation}\label{eq:qddot}
+  \ddot{\vec{q}} = B^{-1} ({}^{b}J^{T}_{F}) {}^b\vec{\gamma}
+\end{equation}
+\par
+The link between the joint space description and the operational space description
+is given by the following formula
+\begin{equation}\label{eq:ws_a}
+  {}^{ws} \ddot{\vec{x}} = {}^{ws} J_{A,E} \ddot{\vec{q}} + {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}
+\end{equation}
+where ${}^{ws} \vec{x}$ is the previously introduced (cite) state in operational space expressed in workspace
+frame and $J_{A,E}$ is the analytical Jacobian of the robot with reference point in the palm of the hand.
+The analytical Jacobian, which takes into account the conversion between the angular velocity $\vec{\omega}$
+and the vector of angular rates \vec{\dot{\Phi}}, can be written as
+\begin{equation*}
+  {}^{ws} J_{A,E} = 
+  \begin{bmatrix}
+    I & 0 \\
+    0 & T^{-1}(\vec{\Phi})
+  \end{bmatrix}
+      {}^{ws} J_{E} \quad {}^{ws}\vec{\omega} = T(\vec{\Phi}) \vec{\dot{\Phi}}
+\end{equation*}
+with $J_E$ the geometric Jacobian with reference point int the palm of the hand. It should be noted
+that the inverse of the matrix $T$ exists if and only if the sine of the angle $\theta$ (part of the state
+$\vec{x}$) is not zero. The derivative of the analytical Jacobian evaluates to
+\begin{equation*}
+  {}^{ws} \dot{J_{A,E}} = 
+  \begin{bmatrix}
+    0 & 0 \\
+    0 & -T^{-1} \dot{T} T^{-1}
+  \end{bmatrix}
+      {}^{ws} J_{E} + 
+      \begin{bmatrix}
+        I & 0 \\
+        0 & T^{-1}
+      \end{bmatrix}
+          {}^{ws} \dot{J}_{E}
+\end{equation*}
+where the derivative of the Jacobian $\dot{J}_{E}$ can be evaluated numerically
+using software libraries like KDL (Kinematics and Dynamics Library).
+\par
+By substituing equation (\ref{eq:qddot}) in equation (\ref{eq:ws_a}) one obtains
+\begin{equation*}
+  {}^{ws} \ddot{\vec{x}} = \underbrace{{}^{ws} J_{A,E} \B^{-1} ({}^b J_{F}^T)}_{\Lambda_A^{-1}} {}^b \vec{\gamma} + {}^{ws} \ddot{J_{A,E}} \dot{\vec{q}}
+\end{equation*}
+where the kinetic psuedo-kinetic energy matrix $\Lambda_{A}$ was introduced. Multiplying both sides of the equation
+by $Lambda_{A}$ leads to
+\begin{equation*}
+  \Lambda_A {}^{ws} \ddot{\vec{x}} =  {}^b \vec{\gamma} +  \Lambda_A  {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}
+\end{equation*}
+where the control wrench $\gamma$ can now be easily chosen as
+\begin{equation*}\label{eq:gamma}
+  \vec{\gamma} = \Lambda_A \vec{a} - \Lambda_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}
+\end{equation*}
+resulting in
+\begin{equation*}
+  {}^{ws}\ddot{\vec{x}} = \vec{a}
+\end{equation*}
+where $\vec{a}$ represents the outer control loop whose design was described in the previous
+section. Taking into account the command wrench $\vec{\gamma}$ the final commanded torque is
+\begin{equation}\label{eq:torque_wo_null}
+  \vec{\tau} = C \dot{\vec{q}} + {}^{b}J^{T}_{F} ( B_A \vec{a} - B_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{F})
+\end{equation}
+
+\subsection{Control of redundant manipulators}
+The control law presented in the previous subsection does not take into account
+the fact that the controlled manipulator is kinematically redundant. In fact it has
+7 joints while the commanded state in the operational space is 6-dimensional.
+A consequence of this fact is that [Khatib] the configuration of the robot, which describes the
+end-effector position and orientation, does not constitute a generalized coordinate
+system for the whole redundant manipulator and the dynamic behavior of the entire redundant
+system cannot be represented by a dynamic model in coordinates only of the end-effector
+configuration. Indeed it turns out that the command torques specified in equation (\ref{eq:torque_wo_null}),
+altough they specify univocally the behavior of the end-effector, they are none other than one of the
+possible torques producing a given operational command wrench $\vec{\gamma}$ on the end-effector, i.e,
+the expression
+\begin{equation}\label{eq:torques_gamma}
+  \vec{\tau} = J^{T} \vec{\gamma}
+\end{equation}
+represents just one of these torques. Clearly different torques lead to completely different behaviors
+of the additional degree of freedom of a kinematically redundant manipulator, some of which may be undesired
+or even dangerous. For this reason a complete characterization of the torques producing a given command wrench
+at the end-effector is necessary to avoid this issue.
+\par
+Independently of the specific choice for the operational space description of the robot
+the second derivative with respect to time of the state can be written in the form
+\begin{equation}\label{eq:xddot}
+  \vec{\ddot{x}} = J(\vec{q}) \vec{\ddot{q}} + \vec{h}(\vec{q},\vec{\dot{q}})
+\end{equation}
+for some Jacobian matrix $J$ and some function of the joints state and velocity $\vec{h}$.
+By combining equations (\ref{eq:joint_space_dyn}), in the case of zero contact forces,
+(\ref{eq:torques_gamma}) and (\ref{eq:xddot}) the equations of motion of the end-effector
+are obtained
+\begin{equation}\label{eq:operational_space_dyn}
+  \Lambda \vec{\ddot{x}} + \vec{\mu}(\vec{q}, \vec{\dot{q}}) + \vec{p} = \vec{\gamma}
+\end{equation}
+where
+\begin{equation*}
+  \Lambda = (J B^{-1} J^{T})^{-1}
+\end{equation*}
+\begin{equation*}
+  \vec{\mu} = \bar{J}^{T} C \vec{\dot{q}} - \Lambda \vec{h}
+\end{equation*}
+\begin{equation*}
+  \vec{p} = \bar{J}^T \vec{G}
+\end{equation*}
+are the already seen pseudo-kinetic energy matrix, the centrifugal and
+Coriolis forces acting on the end-effector and the gravity force acting on the end-effector
+respectively.
+The matrix $\bar{J} = B^{-1} J^{T} \Lambda$ is a generalized inverse of the Jacobian matrix
+which solves the problem of finding the joints velocities that produce a desired twist
+while minimizing the manipulator's instantaneous kinetic energy.
+\par
+Interestingly equation (\ref{eq:operational_space_dyn}) can also be written in the form
+\begin{equation*}
+  \bar{J}^{T} (B \vec{\ddot{q}} + C \vec{\dot{q}}} + \vec{G}) = \vec{\gamma}
+\end{equation*}
+Since the joint space dynamics term that is multiplied by $\bar{J}^{T}$ is equal to the
+commanded torque $\vec{\tau}$ one finds that
+\begin{equation}\label{eq:gamma_torques}
+  \vec{\gamma} = \bar{J}^{T} \vec{\tau}
+\end{equation}
+which is an important result since it allows to design a command torque $\vec{\tau}$ of the form
+\begin{equation}\label{eq:torque_w_null}
+  \vec{\tau} = J^{T} \vec{\gamma} + (I_7 - J^{T}\bar{J}^{T}) \vec{\gamma}_{0}
+\end{equation}
+where the command wrench $\vec{\gamma}_{0}$ is projected in the null space of the
+generalized inverse $\bar{J}^{T}$ hence, as results by direct substitution of equation
+(\ref{eq:torque_w_null}) in equation (\ref{eq:gamma_torques}), it corresponds
+to a \emph{null} operational wrench command. Clearly the term $\vec{\gamma}_{0}$ can
+be used to avoid undesired motion of the additional degree of freedom of the manipulator
+without interfering with the desired motion of the end-effector.
+\par
+It should be noted that the expression in equation (\ref{eq:torque_w_null}) is very general, i.e.,
+every commanded torque $\vec{\tau}$ can always be expressed in that form.
+Also due to its filtering capabilities the matrix $\bar{J}$ is called \emph{dynamically
+consistent generalized inverse} of $J$ in the sense that the projector in the null of $\bar{J}^{T}$ is able
+to filter out commanded wrenches in a way that is consistent with the dynamics of both the
+whole manipulator and the end-effector.
+\par
+Taking into account the development presented in this section the commanded torques $\vec{\tau}$
+in equation (\ref{eq:torque_wo_null}) are updated to
+\begin{equation}\label{eq:torqu_w_null_1}
+  \vec{\tau} = C \dot{\vec{q}} + {}^{b}J^{T}_{F} ( B_A \vec{a} - B_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{F}) +
+  (I_7 - ({}^{b}J^{T}_{F}) ({}^{b} \bar{J}^{T}_{F})) \vec{\gamma}_{0}
+\end{equation}
+where
+\begin{equation*}
+  {}^{b} \bar{J}_{F} = B^{-1} ({}^{b} J^{T}_{F}) ({}^{b} \Lambda_{F})
+\end{equation*}
+and
+\begin{equation*}
+  {}^{b} \Lambda_{F} = ({}^{b} J_{F} B^{-1} ({}^{b} J^{T}_{F}))^{-1}
+\end{equation*}
+
+\subsubsection{Design of the null operational wrench command}
+Design of the control law assigned to the term $\vec{\gamma}_{0}$ was
+guided by the simulation of the task described in section (?). Extensive simulations
+revealed that the uncontrolled internal motions of the robot, while not affecting the desired
+attitude of the end-effector, caused the $5$-th and $7$-th links to rotate cooperatively and reach
+their limits soon. Another issue with internal motions is that they could cause, in some situations,
+collisions between the $4$-th link and the table which is part of the workspace of the robot.
+\par
+In order to handle the issues described the control $\vec{\gamma}_0$ was choosen as
+\begin{equation*}
+  \vec{\gamma}_{0} = J_{im} ^{T} (K_p (\vec{x}_{im,des} - \vec{x}_{im} ) - K_d \vec{\dot{x}}_{im})
+\end{equation*}
+where \emph{im} stands for ``internal motion'', the state $\vec{x}_{im}$
+\begin{equation*}
+  \vec{x}_{im} =
+  \begin{bmatrix}
+    {}^{b} x_{l4} & {}^{b} y_{l4} & {}^{b} z_{l4} & \psi_{l5} & \theta_{l5} & \phi_{l5}
+  \end{bmatrix}^{T} =
+    \begin{bmatrix}
+    \vec{p}^{T}_{l4} & \vec{\Phi}^{T}_{l5}
+  \end{bmatrix}^{T}
+\end{equation*}
+describes the position, with respect to the base of the robot, of the $4$-th link
+and the attitude of the $5$-th link using a ZYZ parametrization and the Jacobian
+$J_{im}$ is such that
+\begin{equation*}
+  \begin{bmatrix}
+    \vec{\dot{p}}_{l4} \\
+    \vec{\dot{\Phi}}_{l5} \\
+  \end{bmatrix} =
+  J_{im} \vec{\dot{q}}
+\end{equation*}
+\par
+The gains $K_p$ and $K_d$ and the desired state $\vec{x}_{im,des}$ were chosen as
+\begin{equation*}
+  K_p =
+  \begin{bmatrix}
+    0 & 0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0 & 0\\
+    0 & 0 & k_{p,z}^{im} & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0 & k_{p, att}^{im}\\
+  \end{bmatrix}
+  \quad
+  K_d = k_{d}^{im} I_{6}
+\end{equation*}
+\begin{equation*}
+  \vec{p}_{l4} =
+  \begin{bmatrix}
+    * & * & {}^{b} z_{ee} + off_z
+  \end{bmatrix}^{T}
+  \quad
+  \vec{\Phi}_{l5} =
+  \begin{bmatrix}
+    * & * & 0\\
+  \end{bmatrix}^{T}
+\end{equation*}
+where ${}^{b} z_{ee}$ is the altitude of the end-effector with respect to the base of the robot
+and $k_{p,z}^{im}$, $k_{att}^{im}$ and $k_{d}^{in}$ are suitable gains.
+Such a choice allows to fix the orientation of the $5$-th link to a value that is comfortable
+during the execution of task described in (??) and to regulate the altitude between the $4$-th link and
+the end-effector so as to avoid collisions between the elbow of the robot and the workspace.
