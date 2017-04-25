@@ -14,7 +14,8 @@ sensor through a mounting plate, due to external forces and torques. The resulti
 \begin{equation}
   {}^S \vec{f}_{s} = -{}^S \vec{f}_{pl} -{}^S \vec{f}_{c} -m {}^S \vec{g} + m {}^S \vec{a}_{cm}
 \end{equation}
-\begin{equation}\label{eq:ne_torque_1}
+\begin{equation}
+  \label{eq:ne_torque_1}
   {}^S \vec{\tau}_{s} = -{}^S \vec{\tau}_{pl} -{}^S \vec{\tau}_{c} -{}^S \tilde{\vec{p}}_{c} {}^S \vec{f}_{c}
   +{}^S \tilde{\vec{g}} m{}^S\vec{c} - {}^S \tilde{\vec{a}}_{cm} m {}^S \vec{c} + {}^S I_{cm} {}^S\vec{\alpha} 
   +{}^S \tilde{\vec{\omega}} {}^S I_{cm} {}^S \vec{\omega}
@@ -41,12 +42,14 @@ of the robot where the sensor is mounted.
 Since in this project the force/torque sensor is primarily used to control the contact force when the end effector
 is still or when it moves along straight lines the angular velocity and the angular acceleration of the end effector
 attached to the sensor can be neglected leading to the equations
-\begin{equation}\label{eq:ne_force_2}
+\begin{equation}
+  \label{eq:ne_force_2}
    \vec{f}_{s} = - \vec{f}_{pl} - \vec{f}_{c} -m  \vec{g} + m  \vec{a}_{cm}
 \end{equation}
-\begin{equation}\label{eq:ne_torque_2}
+\begin{equation}
+  \label{eq:ne_torque_2}
    \vec{\tau}_{s} = - \vec{\tau}_{pl} - \vec{\tau}_{c} - \tilde{\vec{p}}_{c}  \vec{f}_{c}
-  + \tilde{\vec{g}} m\vec{c} -  \tilde{\vec{a}}_{cm} m  \vec{c}
+   + \tilde{\vec{g}} m\vec{c} -  \tilde{\vec{a}}_{cm} m  \vec{c}
 \end{equation}
 
 \subsection{Software induced offset}
@@ -54,32 +57,34 @@ The hardware of the force/torque sensor is built in a such way that the forces a
 with the rigid body attached to it are measured. With reference to the equations (\ref{eq:ne_force_2})
 and (\ref{eq:ne_torque_2}) the signal produced by the sensor can be written as
 
-\begin{equation*}
-  \vec{f}_{m} = -\vec{f}_{s} + \vec{f}_{sw,off}
-\end{equation*}
-\begin{equation*}
-  \vec{\tau}_{s} = -\vec{\tau}_{s} + \vec{\tau}_{sw,off}
-\end{equation*}
+\[
+\vec{f}_{m} = -\vec{f}_{s} + \vec{f}_{sw,off}
+\]
+\[
+\vec{\tau}_{s} = -\vec{\tau}_{s} + \vec{\tau}_{sw,off}
+\]
 where $\vec{f}_{sw, off}$ and $\vec{\tau}_{sw,off}$ represent the offset introduced by
 the sensor when the user activates the \emph{calibration} of the sensor. This operation
 is performed when the sensor is \emph{still} and not in contact with the environment
 and the resulting offset is chosen such that $\vec{f}_{m,0} = \vec{\tau}_{m,0} = \vec{0}$
 where the zero subscript represents the calibration condition. Simple substitutions show that
-\begin{equation*}
+\[
 \vec{f}_{sw,off} = \vec{f}_{s,0} = -\vec{\tau}_{pl} -m {}^S \vec{g}_{0}
-\end{equation*}
-\begin{equation*}
+\]
+\[
 \vec{\tau}_{sw,off} = \vec{\tau}_{s,0} = -\vec{\tau}_{pl} + {}^S \tilde{\vec{g}_{0}} m\vec{c}
-\end{equation*}
+\]
 where $\vec{g}_{0}$ is the value assumed by the gravity expressed in the sensor frame $S$ at the
 moment of the calibration.
 \par
 Taking into account the expressions of the offset the measured forces and torques in absence of angular
 motions can be written as
-\begin{equation}\label{eq:m_force_2}
+\begin{equation}
+  \label{eq:m_force_2}
   \vec{f}_{m} = \vec{f}_{c} +m \vec{g} -m {}^S \vec{g}_{0} - m  \vec{a}_{cm}
 \end{equation}
-\begin{equation}\label{eq:m_torque_2}
+\begin{equation}
+  \label{eq:m_torque_2}
   \vec{\tau}_{m} = \vec{\tau}_{c} + \tilde{\vec{p}}_{c}  \vec{f}_{c}
   - \tilde{\vec{g}} m\vec{c} + {}^S \tilde{\vec{g}_{0}} m\vec{c} +  \tilde{\vec{a}}_{cm} m  \vec{c}
 \end{equation}
@@ -98,68 +103,121 @@ the robot, hence the sensor, assumes a static pose. The estimation can be obtain
 from the measures using a \emph{linear} least squares approach since there exist
 a linear relationship between the measurements and the parameters
 
-\begin{equation*}
-  \begin{flalign*}
-    \begin{bmatrix}
-      \vec{f}_{m} \\
-      \vec{\tau}_{m} \\
-    \end{bmatrix} &=
-    \begin{bmatrix}
-      \vec{g} m + (-m {}^S \vec{g}_{0}) \\
-      -\tilde{\vec{g}} m\vec{c} + ({}^S \tilde{\vec{g}_{0}} m\vec{c}) \\
-    \end{bmatrix}\\
-    & =
-    \begin{bmatrix}
-      \vec{g} & 0_{3 \times 3} & I_{3x3} & 0_{3x3} \\
-      \vec{0} & -\tilde{\vec{g}} & 0_{3x3} & I_{3x3}
-    \end{bmatrix}
-    \begin{bmatrix}
-      m \\
-      m \vec{c} \\
-      -m {}^S \vec{g}_{0} \\
-      {}^S \tilde{\vec{g}_{0}} m\vec{c} \\
-    \end{bmatrix}\\
-    &=
-    H({}^S \vec{g}) \vec{\theta}
-  \end{flalign*}
-\end{equation*}
+\[
+\begin{split}
+  \begin{bmatrix}
+    \vec{f}_{m} \\
+    \vec{\tau}_{m} \\
+  \end{bmatrix} &=
+  \begin{bmatrix}
+    \vec{g} m + (-m {}^S \vec{g}_{0}) \\
+    -\tilde{\vec{g}} m\vec{c} + ({}^S \tilde{\vec{g}_{0}} m\vec{c}) \\
+  \end{bmatrix}\\
+  & =
+  \begin{bmatrix}
+    \vec{g} & 0_{3 \times 3} & I_{3x3} & 0_{3x3} \\
+    \vec{0} & -\tilde{\vec{g}} & 0_{3x3} & I_{3x3}
+  \end{bmatrix}
+  \begin{bmatrix}
+    m \\
+    m \vec{c} \\
+    -m {}^S \vec{g}_{0} \\
+    {}^S \tilde{\vec{g}_{0}} m\vec{c} \\
+  \end{bmatrix}\\
+  &=
+  H({}^S \vec{g}) \vec{\theta}
+\end{split}
+\]
 where ${}^S \vec{g} = {}^S \vec{g(\vec{q})}$ depends on the configuration $\vec{q}$ of the robot.
 \par
 Given n configurations of the robot the estimate is given by
-\begin{equation*}
-  \begin{flalign*}
-    \hat{\vec{\theta}} &=
-    \begin{bmatrix}
-      H(\vec{q}^{1})\\
-      \vdots \\
-      H(\vec{q}^{n})\\
-    \end{bmatrix}^{+}
-    \begin{bmatrix}
-      \vec{f}_{m}^{1} \\
-      \vec{\tau}_{m}^{1} \\
-      \vdots \\
-      \vec{f}_{m}^{n} \\
-      \vec{\tau}_{m}^{n} \\
-    \end{bmatrix}
-    =
-    H_n^{+}
-    \begin{bmatrix}
-      \vec{f}_{m}^{1} \\
-      \vec{\tau}_{m}^{1} \\
-      \vdots \\
-      \vec{f}_{m}^{n} \\
-      \vec{\tau}_{m}^{n} \\
-    \end{bmatrix}\\
-  \end{flalign*}
-\end{equation*}
+\[
+\begin{split}
+  \hat{\vec{\theta}} &=
+  \begin{bmatrix}
+    H(\vec{q}^{1})\\
+    \vdots \\
+    H(\vec{q}^{n})\\
+  \end{bmatrix}^{+}
+  \begin{bmatrix}
+    \vec{f}_{m}^{1} \\
+    \vec{\tau}_{m}^{1} \\
+    \vdots \\
+    \vec{f}_{m}^{n} \\
+    \vec{\tau}_{m}^{n} \\
+  \end{bmatrix}
+  =
+  H_n^{+}
+  \begin{bmatrix}
+    \vec{f}_{m}^{1} \\
+    \vec{\tau}_{m}^{1} \\
+    \vdots \\
+    \vec{f}_{m}^{n} \\
+    \vec{\tau}_{m}^{n} \\
+  \end{bmatrix}\\
+\end{split}
+\]
 where it can be shown that for $n \ge 3$ the matrix $H_n$ is always full column rank
 so that $H_n^{+} = H_n(H_n^{T} H_n)^{-1}$.
 Once the estimate is computed contact forces and torques can be evaluted as
-\begin{equation*}
-  \hat{\vec{f}}_c = \vec{f}_m - \hat{\theta}_{1} \vec{g} - \hat{\vec{\theta}}_{5:7} + \hat{\theta}_{1} \hat{\vec{a}}_{cm}(\vec{q},\vec{\dot{q}},\vec{\ddot{q}})
-\end{equation*}
-\begin{equation*}
-  \hat{\vec{\tau}}_c + \tilde{\vec{p}}_{c}  \hat{\vec{f}}_{c} = \vec{\tau}_m
-    + \tilde{\vec{g}} \hat{\vec{\theta}}_{2:4} - \hat{\vec{\theta}}_{8:10} -  \tilde{\hat{\vec{a}}}_{cm}}(\vec{q},\vec{\dot{q}},\vec{\ddot{q}}) \hat{\vec{\theta}}_{2:4}
-\end{equation*}
+\[
+\hat{\vec{f}}_c = \vec{f}_m - \hat{\theta}_{1} \vec{g} - \hat{\vec{\theta}}_{5:7} + \hat{\theta}_{1} \hat{\vec{a}}_{cm}(\vec{q},\vec{\dot{q}},\vec{\ddot{q}})
+\]
+\[
+\hat{\vec{\tau}}_c + \tilde{\vec{p}}_c  \hat{\vec{f}}_c = \vec{\tau}_m + \tilde{\vec{g}} \hat{\vec{\theta}}_{2:4} - \hat{\vec{\theta}}_{8:10} - \tilde{\hat{\vec{a}}}_{cm}(\vec{q},\vec{\dot{q}},\vec{\ddot{q}}) \hat{\vec{\theta}}_{2:4}
+\]
 where $\hat{\vec{a}}_{cm}$ is an estimate of the linear acceleration of the centre of mass of the rigid body.
+
+An example of estimation, with $n=60$, is shown in the figures below where each step represents a new row of the
+matrix $H_{60}$. 
+
+The estimate parameters are the following:
+\begin{itemize}
+\item $\hat{m} = \SI{0.6848}{kg}$ (see Fig. \ref{fig:mass_estimation})
+\item $\hat{\vec{c}} =
+  \begin{bmatrix}
+    0.32 & 0.28 & 11.20
+  \end{bmatrix}^T$ cm  (see Fig. \ref{fig:com_estimation})
+\item $-\hat{m} {}^S \hat{\vec{g}}_{0} =
+  \begin{bmatrix}
+    0.8577 & -6.0316 & 0.8438 
+  \end{bmatrix}^T
+  $N  (see Fig. \ref{fig:off_f_estimation})
+\item ${}^S \tilde{\hat{\vec{g}}}_{0} \hat{m}\hat{\vec{c}} =
+  \begin{bmatrix}
+    0.8299 & 0.0772 & -0.0149  
+  \end{bmatrix}^T
+  $Nm  (see Fig. \ref{fig:off_t_estimation})
+\end{itemize}
+
+It can be verified that
+\[
+\frac{||\hat{m}\hat{\vec{g}}_0||}{9.81} = 0.6270 \approx 0.6848 = \hat{m}
+\]
+as expected.
+\begin{table}[h]
+  \begin{tabular}{cc}
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \includegraphics[scale=0.5]{mass}
+      \caption{Mass estimation \label{fig:mass_estimation}}
+    \end{subfigure}&
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \includegraphics[scale=0.5]{com}
+      \caption{CoM estimation\label{fig:com_estimation}}
+    \end{subfigure} \\
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \includegraphics[scale=0.5]{off_f}
+      \caption{Offset estimation (Force) \label{fig:off_f_estimation}}
+    \end{subfigure}&
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \includegraphics[scale=0.5]{off_t}
+      \caption{Offset estimation (Torque) \label{fig:off_t_estimation}}
+    \end{subfigure}
+  \end{tabular}
+  \caption*{Estimation results}
+\end{table}
+\newpage
