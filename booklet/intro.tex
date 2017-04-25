@@ -1,0 +1,32 @@
+\section{Introduction}
+In Robotics one of the most interesting task is the manipulation of objects. In general
+it can be distinguished between the task of restraining objects, called grasping,
+and the task of manipulating objects with \emph{fingers} called dexterous manipulation.
+\par
+Among the hand-like end-effectors equipped with fingers proposed in the literature
+there is the Pisa/IIT SoftHand. It is simple because driven by one motor only
+but at the same time robust because it adapts itself to the shape of grasped objects.
+\par
+Altough very versatile the simplicity of the hand make the grasp of thin objects,
+such as a credit card or a sheet of paper, a very hard task
+because such objects do not provide enough contact constraints on the hand
+for the grasp to take place.
+\par
+One possible solution to this problem is to use environmental constraints, such as
+the surface of a table, to drag the object until it reaches the edge of the table and
+sticks out of it. Then a standard grasp can be performed as usual. However in order to make
+this solution workable the problem of making the dragging phase \emph{safe} must be faced.
+In fact by using a \emph{pure position} control strategy the \emph{uncontrolled} contact forces and torques
+arising between the hand and the object and between the object and the surface of the table
+could damage the object or the hand itself.
+\par
+In this project an \emph{hybrid force position} controller was implemented and tested on the
+scenario described above to show that a force feedback solution allows to accomplish the task
+without the issue of damaging the dragged object or the end-effector.
+\par
+The implementation was done using the ROS Control architecture and the robot used
+in the experimental setup was a KUKA LWR $4+$ manipulator.
+
+\subsection{Contents of the report}
+
+\newpage
