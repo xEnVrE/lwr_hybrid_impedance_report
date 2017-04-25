@@ -19,9 +19,9 @@ The gravity term is canceled because it is handled internally by the robot itsel
 The first step towards the exact dynamics inversion is to cancel the Coriolis term
 $C \dot{\vec{q}}$ and the term containing the wrench $\vec{w}_{F}$ which is supposed to
 be available as a feedback signal. The resulting control torque is then
-\begin{equation*}
-  \vec{\tau} = C \dot{\vec{q}} + {}^{b}J^{T}_{F} ({}^b\vec{\gamma} + {}^b\vec{w}_{F})
-\end{equation*}
+\[
+\vec{\tau} = C \dot{\vec{q}} + {}^{b}J^{T}_{F} ({}^b\vec{\gamma} + {}^b\vec{w}_{F})
+\]
 where an additional control wrench $\vec{\gamma}$ is introduced.
 Substituing the control torque and solving for the joints accelerations $\vec{\ddot{q}}$
 leads to
@@ -31,57 +31,58 @@ leads to
 \par
 The link between the joint space description and the operational space description
 is given by the following formula
-\begin{equation}\label{eq:ws_a}
+\begin{equation}
+  \label{eq:ws_a}
   {}^{ws} \ddot{\vec{x}} = {}^{ws} J_{A,E} \ddot{\vec{q}} + {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}
 \end{equation}
 where ${}^{ws} \vec{x}$ is the previously introduced (cite) state in operational space expressed in workspace
 frame and $J_{A,E}$ is the analytical Jacobian of the robot with reference point in the palm of the hand.
 The analytical Jacobian, which takes into account the conversion between the angular velocity $\vec{\omega}$
-and the vector of angular rates \vec{\dot{\Phi}}, can be written as
-\begin{equation*}
-  {}^{ws} J_{A,E} = 
-  \begin{bmatrix}
-    I & 0 \\
-    0 & T^{-1}(\vec{\Phi})
-  \end{bmatrix}
-      {}^{ws} J_{E} \quad {}^{ws}\vec{\omega} = T(\vec{\Phi}) \vec{\dot{\Phi}}
-\end{equation*}
+and the vector of angular rates $\vec{\dot{\Phi}}$, can be written as
+\[
+\prescript{ws}{}{J}_{A,E} = 
+\begin{bmatrix}
+  I & 0 \\
+  0 & T^{-1}(\vec{\Phi})
+\end{bmatrix}
+\prescript{ws}{}{J}_{E} \quad {}^{ws}\vec{\omega} = T(\vec{\Phi}) \vec{\dot{\Phi}}
+\]
 with $J_E$ the geometric Jacobian with reference point int the palm of the hand. It should be noted
 that the inverse of the matrix $T$ exists if and only if the sine of the angle $\theta$ (part of the state
 $\vec{x}$) is not zero. The derivative of the analytical Jacobian evaluates to
-\begin{equation*}
-  {}^{ws} \dot{J_{A,E}} = 
-  \begin{bmatrix}
-    0 & 0 \\
-    0 & -T^{-1} \dot{T} T^{-1}
-  \end{bmatrix}
-      {}^{ws} J_{E} + 
-      \begin{bmatrix}
-        I & 0 \\
-        0 & T^{-1}
-      \end{bmatrix}
-          {}^{ws} \dot{J}_{E}
-\end{equation*}
+\[
+\prescript{ws}{}{\dot{J}}_{A,E} = 
+\begin{bmatrix}
+  0 & 0 \\
+  0 & -T^{-1} \dot{T} T^{-1}
+\end{bmatrix}
+\prescript{ws}{}{J}_{E} + 
+\begin{bmatrix}
+  I & 0 \\
+  0 & T^{-1}
+\end{bmatrix}
+\prescript{ws}{}{\dot{J}}_{E}
+\]
 where the derivative of the Jacobian $\dot{J}_{E}$ can be evaluated numerically
 using software libraries like KDL (Kinematics and Dynamics Library).
 \par
 By substituing equation (\ref{eq:qddot}) in equation (\ref{eq:ws_a}) one obtains
-\begin{equation*}
-  {}^{ws} \ddot{\vec{x}} = \underbrace{{}^{ws} J_{A,E} \B^{-1} ({}^b J_{F}^T)}_{\Lambda_A^{-1}} {}^b \vec{\gamma} + {}^{ws} \ddot{J_{A,E}} \dot{\vec{q}}
-\end{equation*}
+\[
+\prescript{ws}{}{\ddot{\vec{x}}} = \underbrace{{}^{ws} J_{A,E} \B^{-1} ({}^b J_{F}^T)}_{\Lambda_A^{-1}} {}^b \vec{\gamma} + {}^{ws} \ddot{J_{A,E}} \dot{\vec{q}}
+\]
 where the kinetic psuedo-kinetic energy matrix $\Lambda_{A}$ was introduced. Multiplying both sides of the equation
 by $Lambda_{A}$ leads to
-\begin{equation*}
-  \Lambda_A {}^{ws} \ddot{\vec{x}} =  {}^b \vec{\gamma} +  \Lambda_A  {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}
-\end{equation*}
+\[
+\Lambda_A {}^{ws} \ddot{\vec{x}} =  {}^b \vec{\gamma} +  \Lambda_A  {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}
+\]
 where the control wrench $\gamma$ can now be easily chosen as
-\begin{equation*}\label{eq:gamma}
-  \vec{\gamma} = \Lambda_A \vec{a} - \Lambda_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}
-\end{equation*}
+\[\label{eq:gamma}
+\vec{\gamma} = \Lambda_A \vec{a} - \Lambda_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}
+\]
 resulting in
-\begin{equation*}
-  {}^{ws}\ddot{\vec{x}} = \vec{a}
-\end{equation*}
+\[
+\prescript{ws}{}{\ddot{\vec{x}}} = \vec{a}
+\]
 where $\vec{a}$ represents the outer control loop whose design was described in the previous
 section. Taking into account the command wrench $\vec{\gamma}$ the final commanded torque is
 \begin{equation}\label{eq:torque_wo_null}
@@ -121,15 +122,15 @@ are obtained
   \Lambda \vec{\ddot{x}} + \vec{\mu}(\vec{q}, \vec{\dot{q}}) + \vec{p} = \vec{\gamma}
 \end{equation}
 where
-\begin{equation*}
-  \Lambda = (J B^{-1} J^{T})^{-1}
-\end{equation*}
-\begin{equation*}
-  \vec{\mu} = \bar{J}^{T} C \vec{\dot{q}} - \Lambda \vec{h}
-\end{equation*}
-\begin{equation*}
-  \vec{p} = \bar{J}^T \vec{G}
-\end{equation*}
+\[
+\Lambda = (J B^{-1} J^{T})^{-1}
+\]
+\[
+\vec{\mu} = \bar{J}^{T} C \vec{\dot{q}} - \Lambda \vec{h}
+\]
+\[
+\vec{p} = \bar{J}^T \vec{G}
+\]
 are the already seen pseudo-kinetic energy matrix, the centrifugal and
 Coriolis forces acting on the end-effector and the gravity force acting on the end-effector
 respectively.
@@ -138,9 +139,9 @@ which solves the problem of finding the joints velocities that produce a desired
 while minimizing the manipulator's instantaneous kinetic energy.
 \par
 Interestingly equation (\ref{eq:operational_space_dyn}) can also be written in the form
-\begin{equation*}
-  \bar{J}^{T} (B \vec{\ddot{q}} + C \vec{\dot{q}}} + \vec{G}) = \vec{\gamma}
-\end{equation*}
+\[
+\bar{J}^{T} (B \vec{\ddot{q}} + C \vec{\dot{q}} + \vec{G}) = \vec{\gamma}
+\]
 Since the joint space dynamics term that is multiplied by $\bar{J}^{T}$ is equal to the
 commanded torque $\vec{\tau}$ one finds that
 \begin{equation}\label{eq:gamma_torques}
@@ -159,8 +160,8 @@ without interfering with the desired motion of the end-effector.
 \par
 It should be noted that the expression in equation (\ref{eq:torque_w_null}) is very general, i.e.,
 every commanded torque $\vec{\tau}$ can always be expressed in that form.
-Also due to its filtering capabilities the matrix $\bar{J}$ is called \emph{dynamically
-consistent generalized inverse} of $J$ in the sense that the projector in the null of $\bar{J}^{T}$ is able
+Also due to its filtering capabilities the matrix $\bar{J}$ is called \emph{dynamically consistent generalized inverse} 
+of $J$ in the sense that the projector in the null of $\bar{J}^T$ is able 
 to filter out commanded wrenches in a way that is consistent with the dynamics of both the
 whole manipulator and the end-effector.
 \par
@@ -171,13 +172,13 @@ in equation (\ref{eq:torque_wo_null}) are updated to
   (I_7 - ({}^{b}J^{T}_{F}) ({}^{b} \bar{J}^{T}_{F})) \vec{\gamma}_{0}
 \end{equation}
 where
-\begin{equation*}
-  {}^{b} \bar{J}_{F} = B^{-1} ({}^{b} J^{T}_{F}) ({}^{b} \Lambda_{F})
-\end{equation*}
+\[
+\prescript{b}{}{\bar{J}}_{F} = B^{-1} ({}^{b} J^{T}_{F}) ({}^{b} \Lambda_{F})
+\]
 and
-\begin{equation*}
-  {}^{b} \Lambda_{F} = ({}^{b} J_{F} B^{-1} ({}^{b} J^{T}_{F}))^{-1}
-\end{equation*}
+\[
+\prescript{b}{}{\Lambda}_{F} = ({}^{b} J_{F} B^{-1} ({}^{b} J^{T}_{F}))^{-1}
+\]
 
 \subsubsection{Design of the null operational wrench command}
 Design of the control law assigned to the term $\vec{\gamma}_{0}$ was
@@ -188,55 +189,55 @@ their limits soon. Another issue with internal motions is that they could cause,
 collisions between the $4$-th link and the table which is part of the workspace of the robot.
 \par
 In order to handle the issues described the control $\vec{\gamma}_0$ was choosen as
-\begin{equation*}
-  \vec{\gamma}_{0} = J_{im} ^{T} (K_p (\vec{x}_{im,des} - \vec{x}_{im} ) - K_d \vec{\dot{x}}_{im})
-\end{equation*}
+\[
+\vec{\gamma}_{0} = J_{im} ^{T} (K_p (\vec{x}_{im,des} - \vec{x}_{im} ) - K_d \vec{\dot{x}}_{im})
+\]
 where \emph{im} stands for ``internal motion'', the state $\vec{x}_{im}$
-\begin{equation*}
-  \vec{x}_{im} =
-  \begin{bmatrix}
-    {}^{b} x_{l4} & {}^{b} y_{l4} & {}^{b} z_{l4} & \psi_{l5} & \theta_{l5} & \phi_{l5}
-  \end{bmatrix}^{T} =
-    \begin{bmatrix}
-    \vec{p}^{T}_{l4} & \vec{\Phi}^{T}_{l5}
-  \end{bmatrix}^{T}
-\end{equation*}
+\[
+\vec{x}_{im} =
+\begin{bmatrix}
+  {}^{b} x_{l4} & {}^{b} y_{l4} & {}^{b} z_{l4} & \psi_{l5} & \theta_{l5} & \phi_{l5}
+\end{bmatrix}^{T} =
+\begin{bmatrix}
+  \vec{p}^{T}_{l4} & \vec{\Phi}^{T}_{l5}
+\end{bmatrix}^{T}
+\]
 describes the position, with respect to the base of the robot, of the $4$-th link
 and the attitude of the $5$-th link using a ZYZ parametrization and the Jacobian
 $J_{im}$ is such that
-\begin{equation*}
-  \begin{bmatrix}
-    \vec{\dot{p}}_{l4} \\
-    \vec{\dot{\Phi}}_{l5} \\
-  \end{bmatrix} =
-  J_{im} \vec{\dot{q}}
-\end{equation*}
+\[
+\begin{bmatrix}
+  \vec{\dot{p}}_{l4} \\
+  \vec{\dot{\Phi}}_{l5} \\
+\end{bmatrix} =
+J_{im} \vec{\dot{q}}
+\]
 \par
 The gains $K_p$ and $K_d$ and the desired state $\vec{x}_{im,des}$ were chosen as
-\begin{equation*}
-  K_p =
-  \begin{bmatrix}
-    0 & 0 & 0 & 0 & 0 & 0\\
-    0 & 0 & 0 & 0 & 0 & 0\\
-    0 & 0 & k_{p,z}^{im} & 0 & 0 & 0\\
-    0 & 0 & 0 & 0 & 0 & 0\\
-    0 & 0 & 0 & 0 & 0 & 0\\
-    0 & 0 & 0 & 0 & 0 & k_{p, att}^{im}\\
-  \end{bmatrix}
-  \quad
-  K_d = k_{d}^{im} I_{6}
-\end{equation*}
-\begin{equation*}
-  \vec{p}_{l4} =
-  \begin{bmatrix}
-    * & * & {}^{b} z_{ee} + off_z
-  \end{bmatrix}^{T}
-  \quad
-  \vec{\Phi}_{l5} =
-  \begin{bmatrix}
-    * & * & 0\\
-  \end{bmatrix}^{T}
-\end{equation*}
+\[
+K_p =
+\begin{bmatrix}
+  0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & k_{p,z}^{im} & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & k_{p, att}^{im}\\
+\end{bmatrix}
+\quad
+K_d = k_{d}^{im} I_{6}
+\]
+\[
+\vec{p}_{l4} =
+\begin{bmatrix}
+  * & * & {}^{b} z_{ee} + off_z
+\end{bmatrix}^{T}
+\quad
+\vec{\Phi}_{l5} =
+\begin{bmatrix}
+  * & * & 0\\
+\end{bmatrix}^{T}
+\]
 where ${}^{b} z_{ee}$ is the altitude of the end-effector with respect to the base of the robot
 and $k_{p,z}^{im}$, $k_{att}^{im}$ and $k_{d}^{in}$ are suitable gains.
 Such a choice allows to fix the orientation of the $5$-th link to a value that is comfortable
