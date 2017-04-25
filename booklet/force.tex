@@ -167,11 +167,9 @@ Once the estimate is computed contact forces and torques can be evaluted as
 \hat{\vec{\tau}}_c + \tilde{\vec{p}}_c  \hat{\vec{f}}_c = \vec{\tau}_m + \tilde{\vec{g}} \hat{\vec{\theta}}_{2:4} - \hat{\vec{\theta}}_{8:10} - \tilde{\hat{\vec{a}}}_{cm}(\vec{q},\vec{\dot{q}},\vec{\ddot{q}}) \hat{\vec{\theta}}_{2:4}
 \]
 where $\hat{\vec{a}}_{cm}$ is an estimate of the linear acceleration of the centre of mass of the rigid body.
-
+\par
 An example of estimation, with $n=60$, is shown in the figures below where each step represents a new row of the
-matrix $H_{60}$. 
-
-The estimate parameters are the following:
+matrix $H_{60}$. The estimated parameters are the following:
 \begin{itemize}
 \item $\hat{m} = \SI{0.6848}{kg}$ (see Fig. \ref{fig:mass_estimation})
 \item $\hat{\vec{c}} =
@@ -189,12 +187,6 @@ The estimate parameters are the following:
   \end{bmatrix}^T
   $Nm  (see Fig. \ref{fig:off_t_estimation})
 \end{itemize}
-
-It can be verified that
-\[
-\frac{||\hat{m}\hat{\vec{g}}_0||}{9.81} = 0.6270 \approx 0.6848 = \hat{m}
-\]
-as expected.
 \begin{table}[h]
   \begin{tabular}{cc}
     \begin{subfigure}{0.5\textwidth}
@@ -220,4 +212,9 @@ as expected.
   \end{tabular}
   \caption*{Estimation results}
 \end{table}
+It can be verified that
+\[
+\frac{||\hat{m}\hat{\vec{g}}_0||}{9.81} = 0.6270 \approx 0.6848 = \hat{m}
+\]
+as expected.
 \newpage
