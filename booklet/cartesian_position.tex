@@ -1,0 +1,48 @@
+\section{Approaching phase}
+Before using Hybrid Impedance controller the SoftHand is move in a desired position above the
+surface of the table with a inverse dynamics control.
+
+\subsection{Inverse dynamics control}
+The dynamic model of an n-joint manipulator is given by the equation (cita nicola)
+\begin{equation}
+  \label{eq:robot_equation}
+  B(\vec{q})\ddot{\vec{q}} + C(\vec{q}, \dot{\vec{q}}) \dot{\vec{q}} + \cancel{\vec{G}(\vec{q})} = \vec{\tau}
+\end{equation}
+
+The idea is to find a control vector $\vec{\tau}$, as
+a function of the system state, which is capable of realizing an input/output
+relationship of linear type. The possibility of finding such
+a linearising controller is guaranteed by the particular form of system dynamics; the equation
+\ref{eq:robot_equation} is linear in the control $\vec{\tau}$ and has a full-rank matrix $B(\vec{q})$
+which can be inverted for any configuration of the manipulator.
+
+This controller law
+\[
+\vec{\tau} = C(\vec{q}, \dot{\vec{q}}) \dot{\vec{q}} +  B(\vec{q}) \vec{a}
+\]
+leads to the system described by
+\[
+\ddot{\vec{q}} = \vec{a}
+\]
+where $\vec{a}$ is the new input vector.
+
+Given any desired trajectory $\vec{q}_{des}(t)$ tracking of this trajectory for the output $\vec{q}(t)$ is ensured by choosing
+\[
+\vec{a} = \ddot{\vec{q}}_{des} + K_d(\dot{\vec{q}}_{des} - \dot{\vec{q}}) + K_p(\vec{q}_{des} - \vec{q})
+\]
+where $K_p$ and $K_d$ are positive definite matrix and the desired trajectory is $5^\text{th}$ order polynomial
+\[
+q_{des}^{i}(t) = a_0 + a_1 t + a_2 t^2 + a_3 t^3 + a_4 t^4 + a_5 t^5\\
+\]
+with the following boundary condition
+\[
+\begin{split}
+  &q_{des}^{i}(0) = q_{f_{prev}^{i} \quad \dot{q}_{des}^{i}(0) = 0 \quad \ddot{q}_{des}^{i}(0) = 0\\
+    &q_{des}^{i}(t_f) = q_{f}^{i} \quad \dot{q}_{des}^{i}(t_f) = 0 \quad \ddot{q}_{des}^{i}(t_f) = 0
+\end{split}
+\]
+where $\vec{q}_{f}$ is given by an inverse kinematics solver
+\[
+\vec{q}_{f} = FK^{-1}(\vec{x}_{des})
+\]
+\newpage
