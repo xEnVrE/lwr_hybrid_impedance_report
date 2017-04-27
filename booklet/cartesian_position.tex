@@ -22,9 +22,9 @@ in the joint space dynamics of the manipulator
 \]
 the following results
 \[
-\ddot{\vec{q}} = \vec{a}
+\ddot{\vec{q}} = \vec{a}_{p2p}
 \]
-where $\vec{a}$ is the new input vector.
+where $\vec{a}_{p2p}$ is the new input vector.
 \par
 In order to move the hand from the previous configuration $\vec{q}_{prev}$
 to a new one expressed as a position in cartesian coordinates $\vec{p}_{ee}$ and
@@ -46,7 +46,7 @@ where $\vec{q}_{f}$ is given by an inverse kinematics solver
 \par
 In order to execute the trajectory an input vector of the form
 \[
-\vec{a} = \ddot{\vec{q}}_{des} + K_d(\dot{\vec{q}}_{des} - \dot{\vec{q}}) + K_p(\vec{q}_{des} - \vec{q})
+\vec{a}_{p2p} = \ddot{\vec{q}}_{des} + K_d(\dot{\vec{q}}_{des} - \dot{\vec{q}}) + K_p(\vec{q}_{des} - \vec{q})
 \]
 was used where $K_p$ and $K_d$ are positive definite matrices.
 \newpage
