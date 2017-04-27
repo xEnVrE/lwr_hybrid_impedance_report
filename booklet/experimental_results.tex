@@ -15,7 +15,7 @@ which is provided with an internal software layer called Fast Research Interface
   \caption{KUKA LWR$4+$ manipulator. \label{fig:kuka_lwr}}
 \end{figure}
 \par
-In order to send the commanded torques, described in the previous section, to the robot
+In order to send the control laws, described in the previous sections, to the robot
  one of the internal modes of operation, called Joints Specific Impedance, was used
 \[
 \boldsymbol{\tau}_{cmd} = K_j(\vec{q}_{FRI} - \vec{q}_{msr}) + D(d_{j}) + \boldsymbol{\tau}_{FRI} + \vec{f}_{dynamics}(\vec{q}, \dot{\vec{q}}, \ddot{\vec{q}})
@@ -28,7 +28,7 @@ $\boldsymbol{\tau}_{FRI}$ is an additional torque provided by the user and
 $\vec{f}_{dynamics}(\vec{q}, \dot{\vec{q}}, \ddot{\vec{q}})$ is a gravity compensation
 term provided by the producer.
 \par
-Since the controller laws developed are pure torque ones only the term
+Since the control laws developed are pure torque laws only the term
 $\boldsymbol{\tau}_{FRI}$ was used and the others were set as:
 \begin{itemize}
 \item[-] $K_j = 0$;
@@ -37,16 +37,15 @@ $\boldsymbol{\tau}_{FRI}$ was used and the others were set as:
 \end{itemize}
 
 \subsubsection{Force Torque sensor}
-The force torque sensor used in this work is an ATI Mini$45$ (CITA).
-In all the experiments the measured signal was filtered using one of the
-built-in filters (LP filter with cutoff frequency @ $\SI{8}{Hz}$).
+The force/torque sensor used in this work is an ATI Mini$45$ (cite).
+In all the experiments the measured signal was filtered using a built-in
+LP filter with cutoff frequency of $\SI{8}{Hz}$.
 
 \subsubsection{Notes about controllers implementation}
-In order to implement the controller laws
+In order to implement the control laws
 \[
 \begin{split}
-  \vec{\tau} &= C \dot{\vec{q}} + {}^{b}J^{T}_{F} ( B_A \vec{a} - B_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{F}) +
-  (I_7 - ({}^{b}J^{T}_{F}) ({}^{b} \bar{J}^{T}_{F})) \vec{\gamma}_{0}\\
+  \vec{\tau} &= \\
   \vec{\tau} &= C \dot{\vec{q}} + {}^{b}J^{T}_{F} ( B_A \vec{a} - B_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{F}) +
   (I_7 - ({}^{b}J^{T}_{F}) ({}^{b} \bar{J}^{T}_{F})) \vec{\gamma}_{0}
 \end{split}
@@ -77,10 +76,9 @@ form
   \ddot{\vec{q}}_k = (1 - \alpha) \ddot{\vec{q}}_{k-1} + \alpha \frac{\dot{\vec{q}}_k - \dot{\vec{q}}_{k-1}}{t_s}
 \end{cases}
 \]
-where $t_s$ is the sampling time
-\[
-t_s = \SI{3}{ms}
-\]
+where the constant $\alpha \in [0, 1]$ is the smoothing factor and $t_s$ is the sampling time.
+In all the experiments $\alpha = 0.2$ and $t_s = \SI{3}{ms}$.
+\par
 All the others quantities were evaluated numerically using the facilities offered by the KDL library which was
 integrated into the already existing KUKA LWR$4+$ software stack provided to the students
 
@@ -92,7 +90,7 @@ In this experiment (fig. \ref{fig:hand_button}) the robot is supposed to press a
   \caption{The hand while it presses the emergency button. \label{fig:hand_button}}
 \end{figure}
 \par
-Initially a reference command of circa $\SI{1}{N}$ is sent to the robot
+Initially a reference command of approximately $\SI{1}{N}$ is sent to the robot
 until the contact takes place. Then several set points are sent to the robot:
 \begin{itemize}
 \item[-] $F_{z,des} = \SI{-2.5}{N}$
@@ -101,7 +99,7 @@ until the contact takes place. Then several set points are sent to the robot:
 \item[-] $F_{z,des} =\SI{-1}{N}$
 \end{itemize}
 \par
-The results are shown in the Table \ref{fig:button}
+The results, presented in the Table \ref{fig:button},
 \begin{table}[h]
   \begin{tabular}{cc}
     \begin{subfigure}{0.5\textwidth}
@@ -118,13 +116,10 @@ The results are shown in the Table \ref{fig:button}
   \caption{Experiment 1, the hand presses a button.\\
   $K_f = 2$ and $B_f = 45$\label{fig:button}}
 \end{table}
-\par
-As shown in the Table \ref{fig:button_z} the contact phase is visible as 
-a spike in the measured force.
-\par
-The results show that the error after the contact phase is bounded between
+show that the error after the contact phase is bounded between
 $\SI{-0.35}{N}$ and $\SI{0.5}{N}$ and it decreases as the requested force 
-increases.
+increases. The contact phase is visible as a spike in the measured force
+(see Table \ref{fig:button_z}).
 
 \subsection{Experiment 2}
 In this experiment (Fig. \ref{fig:hand_banana}) a banana is dragged 
@@ -134,10 +129,8 @@ on a table while the contact force between the hand and the fruit is regulated.
   \includegraphics[scale=0.25]{hand_banana.png}
   \caption{The hand while it drags the banana. \label{fig:hand_banana}}
 \end{figure}
-\par
 The object is dragged in $\SI{5}{s}$ for a distance of $\SI{12}{cm}$ and the requested force is $\SI{3}{N}$.
-\par
-In the table \ref{fig:banana} only the results of the dragging phase are shown.
+In the Table \ref{fig:banana} only the results of the dragging phase are shown.
 \begin{table}[h]
   \begin{tabular}{cc}
     \begin{subfigure}{0.5\textwidth}
@@ -164,8 +157,9 @@ In the table \ref{fig:banana} only the results of the dragging phase are shown.
   \caption{Experiment 2, the hand drags a banana.\\
   $K_f = 2.5$ and $B_f = 85$.}\label{fig:banana}
 \end{table}
-\par
 Although the force error is bounded between $\SI{-0.6}{N}$ and 
 $\SI{-0.25}{N}$ undesired spikes are present because of
 the vibrations due to the movement.
+
+\subsection{Experiment 3}
 \newpage

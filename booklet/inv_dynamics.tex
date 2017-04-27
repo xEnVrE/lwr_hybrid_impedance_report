@@ -1,4 +1,4 @@
-\section{Inverse Dynamics Inner Loop}
+\section{Inverse Dynamics Inner Loop}\label{sec:invdyn}
 In the previous section the hybrid force position control scheme was described
 with the assumption that an inverse dynamics inner loop was available. In this
 section the inverse dynamics controller is described and the issue of controlling
@@ -35,7 +35,7 @@ is given by the following formula
   \label{eq:ws_a}
   {}^{ws} \ddot{\vec{x}} = {}^{ws} J_{A,E} \ddot{\vec{q}} + {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}
 \end{equation}
-where ${}^{ws} \vec{x}$ is the previously introduced (cite) state in operational space expressed in workspace
+where ${}^{ws} \vec{x}$ is the previously introduced (eq \ref{eq:state_space}) state in operational space expressed in workspace
 frame and $J_{A,E}$ is the analytical Jacobian of the robot with reference point in the palm of the hand.
 The analytical Jacobian, which takes into account the conversion between the angular velocity $\vec{\omega}$
 and the vector of angular rates $\vec{\dot{\Phi}}$, can be written as
@@ -68,23 +68,23 @@ using software libraries like KDL (Kinematics and Dynamics Library).
 \par
 By substituing equation (\ref{eq:qddot}) in equation (\ref{eq:ws_a}) one obtains
 \[
-\prescript{ws}{}{\ddot{\vec{x}}} = \underbrace{{}^{ws} J_{A,E} \B^{-1} ({}^b J_{F}^T)}_{\Lambda_A^{-1}} {}^b \vec{\gamma} + {}^{ws} \ddot{J_{A,E}} \dot{\vec{q}}
+\prescript{ws}{}{\ddot{\vec{x}}} = \underbrace{\prescript{ws}{}{J}_{A,E} \B^{-1} ({}^b J_{F}^T)}_{\Lambda_A^{-1}} {}^b \vec{\gamma} + {}^{ws} \ddot{J_{A,E}} \dot{\vec{q}}
 \]
 where the kinetic psuedo-kinetic energy matrix $\Lambda_{A}$ was introduced. Multiplying both sides of the equation
-by $Lambda_{A}$ leads to
+by $\Lambda_{A}$ leads to
 \[
 \Lambda_A {}^{ws} \ddot{\vec{x}} =  {}^b \vec{\gamma} +  \Lambda_A  {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}
 \]
 where the control wrench $\gamma$ can now be easily chosen as
 \[\label{eq:gamma}
-\vec{\gamma} = \Lambda_A \vec{a} - \Lambda_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}
+\vec{\gamma} = \Lambda_A \vec{a}_{cmd} - \Lambda_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}
 \]
 resulting in
 \[
-\prescript{ws}{}{\ddot{\vec{x}}} = \vec{a}
+\prescript{ws}{}{\ddot{\vec{x}}} = \vec{a}_{cmd}
 \]
-where $\vec{a}$ represents the outer control loop whose design was described in the previous
-section. Taking into account the command wrench $\vec{\gamma}$ the final commanded torque is
+where $\vec{a}_{cmd}$ represents the outer control expressed in equation (\ref{eq:final_a_cmd}).
+Taking into account the command wrench $\vec{\gamma}$ the final commanded torque is
 \begin{equation}\label{eq:torque_wo_null}
   \vec{\tau} = C \dot{\vec{q}} + {}^{b}J^{T}_{F} ( B_A \vec{a} - B_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{F})
 \end{equation}
@@ -182,7 +182,7 @@ and
 
 \subsubsection{Design of the null operational wrench command}
 Design of the control law assigned to the term $\vec{\gamma}_{0}$ was
-guided by the simulation of the task described in section (?). Extensive simulations
+guided by the simulation of the task described in section \ref{sec:task_description}. Extensive simulations
 revealed that the uncontrolled internal motions of the robot, while not affecting the desired
 attitude of the end-effector, caused the $5$-th and $7$-th links to rotate cooperatively and reach
 their limits soon. Another issue with internal motions is that they could cause, in some situations,
@@ -241,6 +241,6 @@ K_d = k_{d}^{im} I_{6}
 where ${}^{b} z_{ee}$ is the altitude of the end-effector with respect to the base of the robot
 and $k_{p,z}^{im}$, $k_{att}^{im}$ and $k_{d}^{in}$ are suitable gains.
 Such a choice allows to fix the orientation of the $5$-th link to a value that is comfortable
-during the execution of task described in (??) and to regulate the altitude between the $4$-th link and
+during the execution of task described in the section \ref{sec:task_description} and to regulate the altitude between the $4$-th link and
 the end-effector so as to avoid collisions between the elbow of the robot and the workspace.
 \newpage

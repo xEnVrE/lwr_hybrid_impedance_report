@@ -1,6 +1,7 @@
 \section{Measure of the contact forces and torques}
 In the previous sections the hybrid force-position control architecture was described
-and the assumption was made that the wrench $\vec{F}_{ee, env}$ exerted by the end effector on the environment
+and the assumption was made that the wrench $\vec{w}_{F}$ (see eq. \ref{eq:joint_space_dyn})
+exerted by the end effector on the environment
 was available as a feedback signal.
 \par
 In this section it is explained how such a wrench can be obtained starting from the \emph{raw} signal
@@ -12,15 +13,20 @@ to describe, by means of the Newton-Euler approach, the motion of a rigid body, 
 sensor through a mounting plate, due to external forces and torques. The resulting equations are the following
 
 \begin{equation}
-  {}^S \vec{f}_{s} = -{}^S \vec{f}_{pl} -{}^S \vec{f}_{c} -m {}^S \vec{g} + m {}^S \vec{a}_{cm}
+  \prescript{ws}{}{ \vec{f}}_{s} = -\prescript{ws}{}{ \vec{f}}_{pl} -\prescript{ws}{}{ \vec{f}}_{c} -m \prescript{ws}{}{ \vec{g}}
+  + m \prescript{ws}{}{ \vec{a}}_{cm}
 \end{equation}
-\begin{equation}
-  \label{eq:ne_torque_1}
-  {}^S \vec{\tau}_{s} = -{}^S \vec{\tau}_{pl} -{}^S \vec{\tau}_{c} -{}^S \tilde{\vec{p}}_{c} {}^S \vec{f}_{c}
-  +{}^S \tilde{\vec{g}} m{}^S\vec{c} - {}^S \tilde{\vec{a}}_{cm} m {}^S \vec{c} + {}^S I_{cm} {}^S\vec{\alpha} 
-  +{}^S \tilde{\vec{\omega}} {}^S I_{cm} {}^S \vec{\omega}
+\begin{equation}\label{eq:ne_torque_1}
+  \begin{split}
+  \prescript{ws}{}{ \vec{\tau}}_{s} =& -\prescript{ws}{}{ \vec{\tau}}_{pl} -\prescript{ws}{}{ \vec{\tau}}_{c}
+  - \prescript{ws}{}{ \tilde{\vec{p}}}_{c} \prescript{ws}{}{ \vec{f}}_{c}
+  + \prescript{ws}{}{ \tilde{\vec{g}}} m\prescript{ws}{}{\vec{c}} \\
+  & - \prescript{ws}{}{ \tilde{\vec{a}}}_{cm} m \prescript{ws}{}{ \vec{c}}
+  + \prescript{ws}{}{ I}_{cm} \prescript{ws}{}{\vec{\alpha}}
+  + \prescript{ws}{}{ \tilde{\vec{\omega}}} \prescript{ws}{}{ I}_{cm} \prescript{ws}{}{ \vec{\omega}}\\
+  \end{split}
 \end{equation}
-where $S$ denotes a reference frame fixed to the sensor body, as introduced in (cite prev sections),
+where
 $\vec{f}_{s}$ and $\vec{\tau}_{s}$ are the forces and torques exerted by the sensor on the rigid body,
 $\vec{f}_{pl}$ and $\vec{\tau}_{pl}$ are due to the mounting plate,
 $\vec{f}_{c}$ and $\vec{\tau}_{c}$ are the \emph{external} forces and torques exerted on the rigid body in the interaction
@@ -32,9 +38,9 @@ $\vec{g}$ is the gravity vector, $\vec{a}_{cm}$ is the linear acceleration of th
 $\vec{\omega}$ is the angular velocity of the rigid body and
 $\vec{\alpha}$ is the angular acceleration of the rigid body.
 \par
-It should be noted that the wrench $\vec{F}_{ee,env}$ with reference point in the contact point with the environment is given by
+It should be noted that the wrench $\vec{w}_{F}$  is given by
 $\begin{bmatrix}
-  & -\vec{f}_{c} ^T & - \vec{\tau}_{c} ^ T \\
+ -\vec{f}_{c} ^T, & - (\vec{\tau}_{c} +\tilde{\vec{p}}_{c} \vec{f}_{c})^T
 \end{bmatrix}^T$
 and that all the torques in equation (\ref{eq:ne_torque_1}) are expressed with the reference point in the wrist
 of the robot where the sensor is mounted.
@@ -69,10 +75,10 @@ is performed when the sensor is \emph{still} and not in contact with the environ
 and the resulting offset is chosen such that $\vec{f}_{m,0} = \vec{\tau}_{m,0} = \vec{0}$
 where the zero subscript represents the calibration condition. Simple substitutions show that
 \[
-\vec{f}_{sw,off} = \vec{f}_{s,0} = -\vec{\tau}_{pl} -m {}^S \vec{g}_{0}
+\vec{f}_{sw,off} = \vec{f}_{s,0} = -\vec{\tau}_{pl} -m \prescript{ws}{}{ \vec{g}}_{0}
 \]
 \[
-\vec{\tau}_{sw,off} = \vec{\tau}_{s,0} = -\vec{\tau}_{pl} + {}^S \tilde{\vec{g}_{0}} m\vec{c}
+\vec{\tau}_{sw,off} = \vec{\tau}_{s,0} = -\vec{\tau}_{pl} + \prescript{ws}{}{ \tilde{\vec{g}}}_{0} m\vec{c}
 \]
 where $\vec{g}_{0}$ is the value assumed by the gravity expressed in the sensor frame $S$ at the
 moment of the calibration.
@@ -81,17 +87,18 @@ Taking into account the expressions of the offset the measured forces and torque
 motions can be written as
 \begin{equation}
   \label{eq:m_force_2}
-  \vec{f}_{m} = \vec{f}_{c} +m \vec{g} -m {}^S \vec{g}_{0} - m  \vec{a}_{cm}
+  \vec{f}_{m} = \vec{f}_{c} +m \vec{g} -m \prescript{ws}{}{ \vec{g}}_{0} - m  \vec{a}_{cm}
 \end{equation}
 \begin{equation}
   \label{eq:m_torque_2}
   \vec{\tau}_{m} = \vec{\tau}_{c} + \tilde{\vec{p}}_{c}  \vec{f}_{c}
-  - \tilde{\vec{g}} m\vec{c} + {}^S \tilde{\vec{g}_{0}} m\vec{c} +  \tilde{\vec{a}}_{cm} m  \vec{c}
+  - \tilde{\vec{g}} m\vec{c} + \prescript{ws}{}{ \tilde{\vec{g}}}_{0} m\vec{c} +  \tilde{\vec{a}}_{cm} m  \vec{c}
 \end{equation}
 As suggested by the previous formulas in order to obtain the part of the measure related to the contact
 with the environment it is required to estimate the mass of the rigid body $m$, the position of the centre of
-mass with respect to the wrist $\vec{c}$ and the offsets $-m {}^S \vec{g}_{0}$ and ${}^S \tilde{\vec{g}_{0}} m\vec{c}$.
-The gravity ${}^S \vec{g}$ expressed in sensor frame can be obtained using the direct kinematics software facilities
+mass with respect to the wrist $\vec{c}$ and the offsets $-m \prescript{ws}{}{ \vec{g}}_{0}$
+and $\prescript{ws}{}{ \tilde{\vec{g}}}_{0} m\vec{c}$.
+The gravity $\prescript{ws}{}{ \vec{g}}$ expressed in sensor frame can be obtained using the direct kinematics software facilities
 developed for the project while the linear acceleration $\vec{a}_{cm}$ can be obtained using an appropriate
 jacobian, its derivative and an estimate of the angular velocities and accelerations of the joints
 of the robot.
@@ -110,8 +117,8 @@ a linear relationship between the measurements and the parameters
     \vec{\tau}_{m} \\
   \end{bmatrix} &=
   \begin{bmatrix}
-    \vec{g} m + (-m {}^S \vec{g}_{0}) \\
-    -\tilde{\vec{g}} m\vec{c} + ({}^S \tilde{\vec{g}_{0}} m\vec{c}) \\
+    \vec{g} m + (-m \prescript{ws}{}{ \vec{g}}_{0}) \\
+    -\tilde{\vec{g}} m\vec{c} + (\prescript{ws}{}{ \tilde{\vec{g}}}_{0} m\vec{c}) \\
   \end{bmatrix}\\
   & =
   \begin{bmatrix}
@@ -121,14 +128,14 @@ a linear relationship between the measurements and the parameters
   \begin{bmatrix}
     m \\
     m \vec{c} \\
-    -m {}^S \vec{g}_{0} \\
-    {}^S \tilde{\vec{g}_{0}} m\vec{c} \\
+    -m \prescript{ws}{}{ \vec{g}}_{0} \\
+    \prescript{ws}{}{ \tilde{\vec{g}}}_{0} m\vec{c} \\
   \end{bmatrix}\\
   &=
-  H({}^S \vec{g}) \vec{\theta}
+  H(\prescript{ws}{}{ \vec{g}}) \vec{\theta}
 \end{split}
 \]
-where ${}^S \vec{g} = {}^S \vec{g(\vec{q})}$ depends on the configuration $\vec{q}$ of the robot.
+where $\prescript{ws}{}{ \vec{g}} = \prescript{ws}{}{ \vec{g(\vec{q})}}$ depends on the configuration $\vec{q}$ of the robot.
 \par
 Given n configurations of the robot the estimate is given by
 \[
@@ -167,7 +174,7 @@ Once the estimate is computed contact forces and torques can be evaluted as
 \hat{\vec{\tau}}_c + \tilde{\vec{p}}_c  \hat{\vec{f}}_c = \vec{\tau}_m + \tilde{\vec{g}} \hat{\vec{\theta}}_{2:4} - \hat{\vec{\theta}}_{8:10} - \tilde{\hat{\vec{a}}}_{cm}(\vec{q},\vec{\dot{q}},\vec{\ddot{q}}) \hat{\vec{\theta}}_{2:4}
 \]
 where $\hat{\vec{a}}_{cm}$ is an estimate of the linear acceleration of the centre of mass of the rigid body.
-\par
+\subsubsection{Example of estimation}
 An example of estimation, with $n=60$, is shown in the figures below where each step represents a new row of the
 matrix $H_{60}$. The estimated parameters are the following:
 \begin{itemize}
@@ -176,12 +183,12 @@ matrix $H_{60}$. The estimated parameters are the following:
   \begin{bmatrix}
     0.32 & 0.28 & 11.20
   \end{bmatrix}^T$ cm  (see Fig. \ref{fig:com_estimation})
-\item $-\hat{m} {}^S \hat{\vec{g}}_{0} =
+\item $-\hat{m} \prescript{ws}{}{ \hat{\vec{g}}}_{0} =
   \begin{bmatrix}
     0.8577 & -6.0316 & 0.8438 
   \end{bmatrix}^T
   $N  (see Fig. \ref{fig:off_f_estimation})
-\item ${}^S \tilde{\hat{\vec{g}}}_{0} \hat{m}\hat{\vec{c}} =
+\item $\prescript{ws}{}{ \tilde{\hat{\vec{g}}}}_{0} \hat{m}\hat{\vec{c}} =
   \begin{bmatrix}
     0.8299 & 0.0772 & -0.0149  
   \end{bmatrix}^T
