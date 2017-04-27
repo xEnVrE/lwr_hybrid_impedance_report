@@ -1,7 +1,7 @@
-\section{Introduction}
+\section*{Introduction}
 In Robotics one of the most interesting task is the manipulation of objects. In general
 it can be distinguished between the task of restraining objects, called grasping,
-and the task of manipulating objects with \emph{fingers} called dexterous manipulation.
+and the task of manipulating objects with fingers called dexterous manipulation.
 \par
 Among the hand-like end-effectors equipped with fingers proposed in the literature
 there is the Pisa/IIT SoftHand. It is simple because driven by one motor only
@@ -27,6 +27,33 @@ without the issue of damaging the dragged object or the end-effector.
 The implementation was done using the ROS Control architecture and the robot used
 in the experimental setup was a KUKA LWR $4+$ manipulator.
 
-\subsection{Contents of the report}
-
+\subsection*{Contents description}
+In the section number one the task of interest is briefly recalled
+and a number of reference frames are introduced. They will be useful
+to identify the quantities involved in the design of the controllers.
+\par
+In the section number two the main controller which realizes the hybrid
+force position strategy is designed by choosing appropriate ``robot impedances''
+for each degree of freedom within the so-called \emph{Hybrid Impedance (HIC)} framework
+proposed by Spong in the 80s.
+\par
+In the section number three the synthesis of an inner loop inverse dynamics
+controller, which is required by the HIC, is discussed. Also the issues of
+controlling a kinematically redundant robot, like the LWR $4$+ in the case
+of the task described, in the operational space
+are discussed and solved using a \emph{dynamically consistent
+generalized inverse} of the Jacobian from Khatib.
+\par
+In the section number four the Newton-Euler equations are written for
+a rigid body attached to a common force/torque sensor in order to understand
+how to obtain the measure of the contact forces and torques from the raw
+signal of the sensor. This measure is required as a feedback signal within the
+HIC framework. Also a simple least squares like approach is proposed
+to estimate the mass of the rigid body, its center of mass and some software
+induced offset introduced by the sensor itself.
+\par
+In the section number five ??
+\par
+In the ending section the experimental setup is presented together with
+the results of several experiments.
 \newpage
