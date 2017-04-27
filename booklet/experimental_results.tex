@@ -37,7 +37,8 @@ $\boldsymbol{\tau}_{FRI}$ was used and the others were set as:
 \end{itemize}
 
 \subsubsection{Force Torque sensor}
-The force/torque sensor used in this work is an ATI Mini$45$ (cite).
+The force/torque sensor used in this work is an ATI Mini$45$
+\cite{ATIIndustrialAutomation2017}.
 In all the experiments the measured signal was filtered using a built-in
 LP filter with cutoff frequency of $\SI{8}{Hz}$.
 
@@ -45,8 +46,8 @@ LP filter with cutoff frequency of $\SI{8}{Hz}$.
 In order to implement the control laws
 \[
 \begin{split}
-  \vec{\tau} &= \\
-  \vec{\tau} &= C \dot{\vec{q}} + {}^{b}J^{T}_{F} ( B_A \vec{a} - B_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{F}) +
+  \vec{\tau} &= C \dot{\vec{q}} + B \vec{a}_{p2p}\\
+  \vec{\tau} &= C \dot{\vec{q}} + {}^{b}J^{T}_{F} ( \Lambda_A \vec{a}_{cmd} - \Lambda_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{F}) +
   (I_7 - ({}^{b}J^{T}_{F}) ({}^{b} \bar{J}^{T}_{F})) \vec{\gamma}_{0}
 \end{split}
 \]
