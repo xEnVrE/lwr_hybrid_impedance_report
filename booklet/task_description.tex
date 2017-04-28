@@ -1,4 +1,4 @@
-\section{Description of the task}\label{sec:task_description}
+>\section{Description of the task}\label{sec:task_description}
 This section serves as a preliminary one for the rest of the report. The main task
 of interest is briefly recalled and several frames of reference are introduced within
 the typical setup in which the task is performed. These frames of reference, along
@@ -11,7 +11,7 @@ anthropomorphic manipulator equipped with an hand-like end-effector, a table and
 able to grasp using its primitives.
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.9]{frames.pdf}
+  \includegraphics[scale=1.1]{frames_new.pdf}
   \caption{Typical set-up with reference frames \label{fig:frames}}
 \end{figure}
 Then the task to be performed consists in dragging the object on the table, hence exploiting
@@ -19,9 +19,14 @@ the environonmental constraints offered by the surface of the table, until the o
 out of the border of the table and a standard grasp is feasible. Also the dragging phase should
 be accomplished without damaging the object or the hand because of too high contact forces between
 the object and the surface of the table or between the object and the hand.
-For this reason the manipulator is equipped with a force/torque sensor which is rigidely attached
+For this reason the manipulator is equipped with a force/torque sensor (fig. \ref{fig:sensor}) which is rigidely attached
 to the last link of the robot and measures forces and torques exchanged at the wrist of the robot.
 The hand is connected to the sensor using a mounting plate and a clamp.
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=1]{sensor.pdf}
+  \caption{Set-up of the force/torque sensor.\label{fig:sensor}}
+\end{figure}
 
 \subsection{Division of the task in phases}\label{sec:task_division}
 The dragging phase described above can be considered as the \emph{final} part of a more
