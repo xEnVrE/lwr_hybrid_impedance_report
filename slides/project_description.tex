@@ -1,23 +1,46 @@
 \section{Project description}
-\begin{frame}{Problem}
+\begin{frame}{Grasp of thin objects}
   \begin{columns}
     \begin{column}{0.5\textwidth}
+      VIDEO PROBLEM
     \end{column}
     \begin{column}{0.5\textwidth}
-      Performing the grasp of thin objects could be an hard task
-      because not enough contact constraints are provided by the object
+      \begin{alertblock}{Problem}
+        Performing the grasp of thin objects could be an hard task
+        because not enough contact constraints are provided by the object
+      \end{alertblock}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Solution}
+\begin{frame}{A solution to the problem}
+  Use of environmental constraints in order to la presa in un secondo momento
+  for example by dragging the object on the table
   \begin{columns}
     \begin{column}{0.5\textwidth}
+      VIDEO SOLUTION
     \end{column}
     \begin{column}{0.5\textwidth}
-      Performing the grasp of thin objects could be an hard task
-      because not enough contact constraints are provided by the object
+      \begin{exampleblock}{Recipe}
+        \begin{itemize}
+        \item[-] the hand si appoggia sull'oggetto
+        \item[-] the hand drags the object until it \alert{sticks out 
+          of the border} of the table 
+        \item[-] the hand grasps the object
+        \end{itemize}
+      \end{exampleblock}
     \end{column}
   \end{columns}
 \end{frame}
 
+\begin{frame}{How to perform a safe dragging phase}
+  The dragging phase could \alert{damage} the object due to uncontrolled contact forces between the 
+  hand and the object.
+  \par
+  An hybrid position force control strategy allows to avoid this issue.
+  \vskip0.5in
+  \begin{exampleblock}{Aim of this project}
+    Develop an hybrid force position control that allows to move the hand and 
+    at the same time to regulate the contact force using a force feedback signal.
+  \end{exampleblock}
+\end{frame}
