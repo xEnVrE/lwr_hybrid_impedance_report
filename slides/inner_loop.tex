@@ -1,0 +1,62 @@
+\section{Inner loop inverse dynamics}
+
+\begin{frame}[shrink=15]{Inverse dynamics controller}
+  In order to assign the second derivative of the state $\vec{x}$ arbitrarily an inverse dynamics
+  controller is required
+  \[
+  B(\vec{q}) \ddot{\vec{q}} + C(\vec{q}, \dot{\vec{q}}) \dot{\vec{q}} + \vec{G}(\vec{q}) = \vec{\tau} - {}^{b}J^{T}_{S} {}^b\vec{w}_{S}
+  \longrightarrow {}^{ws}\ddot{\vec{x}} = \vec{a} 
+  \]
+  \vskip-2em
+  \begin{columns}[t]
+    \begin{column}{0.55\columnwidth}
+      \begin{itemize}
+      \item<2->[] Joint Space description
+      \item<2->[] $\vec{\tau} = C \dot{\vec{q}}  + \vec{G} + {}^{b}J^{T}_{S} ({}^b\vec{\gamma} + {}^b\vec{w}_{S})$
+      \item<3->[] $\ddot{\vec{q}} = B^{-1} ({}^{b}J^{T}_{S}) {}^b\vec{\gamma}$
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.8\columnwidth}
+      \begin{itemize}
+      \item<4->[] HIC requires operational space description
+      \item<4->[] ${}^{ws} \ddot{\vec{x}} = {}^{ws} J_{A,E} \ddot{\vec{q}} + {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}$
+      \item<5->[] ${}^{ws} J_{A,E} = 
+        \left[
+          \begin{smallmatrix}
+            I & 0 \\
+            0 & T^{-1}(\vec{\Phi})
+          \end{smallmatrix}
+          \right]$
+        ${}^{ws} J_{E} \quad {}^{ws}\vec{\omega} = T(\vec{\Phi}) \vec{\dot{\Phi}}$\\
+        $\mathrm{det}(T) = -\sin(\theta) \neq 0$\\
+        ${}^{ws} \dot{J_{A,E}} = 
+        \left[
+          \begin{smallmatrix}
+            0 & 0 \\
+            0 & -T^{-1} \dot{T} T^{-1}
+          \end{smallmatrix}
+          \right]
+             {}^{ws} J_{E} + 
+             \left[
+               \begin{smallmatrix}
+                 I & 0 \\
+                 0 & T^{-1}
+               \end{smallmatrix}
+               \right]
+                  {}^{ws} \dot{J}_{E}$
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \begin{columns}
+    \begin{column}{2\textwidth}
+      \begin{itemize}
+      \item<6->[]Substitute $\ddot{\vec{q}}$ in the operational space description
+      \item<6->[]${}^{ws} \ddot{\vec{x}} = \underbrace{{}^{ws} J_{A,E} B^{-1} ({}^b J_{S}^T)}_{\Lambda_A^{-1}} {}^b \vec{\gamma} + {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}$
+      \item<7->[]$\Lambda_A {}^{ws} \ddot{\vec{x}} =  \vec{\gamma} +  \Lambda_A  {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}$
+      \item<8->[]$\vec{\gamma}_{cmd} = \Lambda_A \vec{a} - \Lambda_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}}$
+      \item<9->[]$\vec{\tau} = C \dot{\vec{q}} + \vec{G} + {}^{b}J^{T}_{S} (\Lambda_A \vec{a}_{cmd} - \Lambda_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{S})
+        \Longrightarrow {}^{ws}\ddot{\vec{x}} = \vec{a}$
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
