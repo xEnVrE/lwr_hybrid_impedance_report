@@ -41,7 +41,7 @@ with boundary conditions
 \]
 where $\vec{q}_{f}$ is given by an inverse kinematics solver
 \[
-\vec{q}_{f} = FK^{-1}(\vec{q}_{prev}, \vec{p}_{ee,des},\prescript{b}{}{R}_{ee,des})
+\vec{q}_{f} = FK^{-1}(\vec{p}_{ee,des},\prescript{b}{}{R}_{ee,des})
 \]
 and is discarded whenever its components exceed the joints limits.
 \par
