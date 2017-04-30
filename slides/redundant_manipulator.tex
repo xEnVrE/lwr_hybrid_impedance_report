@@ -1,22 +1,114 @@
-\begin{frame}
-  \frametitle{Control of internal motions}
-  \begin{itemize}
-  \item[-] kinematically redundant 7 DoFs manipulator
-  \item[-] additional control of the position of the 4-th link
-  \item[-] use of a \emph{dynamically consistent} generalized inverse of $J$ to filter the additional control [Khatib, 1987]
-    
-  \end{itemize}
-  \begin{flalign*}
-    &\hat{J} = B^{-1} J^{T} \Lambda\\
-    &\hat{J}^{T} (B \ddot{\vec{q}} + C \dot{\vec{q}}) = \hat{J}^{T} \boldsymbol{\tau} = \Lambda\ddot{\vec{x}} + \boldsymbol{\mu}\\
-    &\vec{\tau} = C \dot{\vec{q}} + J^{T}_{F} (\vec{\gamma_{ee}} + \vec{w}_{F}) +
-    (I_7 - J^{T}_{F}\hat{J}^{T})\vec{\gamma_0}\\
-    &\vec{\gamma_0} = J_{a_4}^{T}(K_p (\vec{x}_{a_4,des} - \vec{x}_{a_4}) - K_d \dot{\vec{x}}_{a_4})\\
-    &\vec{x}_{a_4,des} = \begin{bmatrix} \frac{x_{ee}}{2} & 0 & z_{ee} + z_{offset} \end{bmatrix}^{T}
-  \end{flalign*}
-  %% The manipulator is kinematically redundant because it possesses $7$ DoFs that are more
-  %% than needed to execute the task assigned to the end effector.\\
-  %% In order to control the position of the 4-th link an additional controller is used 
-  %% whose contribution is filtered out to obtain a \emph{null force operational torque vector} $\boldsymbol{\tau}_0$.
-  %% \emph{null operational} torque vector
+\begin{frame}{Issues with internal motions}
+  In the case of the task described the Kuka LWR $4+$ is a kinetically redundant manipulator.
+  \par
+  Extensive simulations revealed
+  that the uncontrolled internal motions of the robot, while not affecting the
+  desired attitude of the hand, cause the $5$-th and $7$-th links to rotate
+  cooperatively and reach their limits soon. Another issue with internal motions
+  is that they could cause, in some situations, collisions between the $4$-th
+  link and the table which is part of the workspace of the robot.
+  \par
+  These issues are solved use a \emph{dynamically consistent} generalized inverse of the Jacobian [Khatib, 1987]
+\end{frame}
+  
+\begin{frame}{Control of internal motions [Khatib, 1987]}
+  The standard operational space dynamics can be written by substituting
+  (\ref{eq:xddot}) in (\ref{eq:dynamic_joint}) resulting in (\ref{eq:operational_space_dyn})
+  \begin{columns}
+    \begin{column}{0.7\columnwidth}
+      \begin{equation}\label{eq:dynamic_joint}
+      B(\vec{q}) \ddot{\vec{q}} + C(\vec{q}, \dot{\vec{q}}) \dot{\vec{q}} + \vec{G}(\vec{q}) = \vec{\tau} = J^{T} \vec{\gamma}
+      \end{equation}
+      \begin{equation}\label{eq:xddot}
+        \vec{\ddot{x}} = J(\vec{q}) \vec{\ddot{q}} + \vec{h}(\vec{q},\vec{\dot{q}})
+      \end{equation}
+      \begin{equation}\label{eq:operational_space_dyn}
+        \Lambda \vec{\ddot{x}} + \vec{\mu}(\vec{q}, \vec{\dot{q}}) + \vec{p} = \vec{\gamma}
+      \end{equation}
+    \end{column}
+    \begin{column}{0.4\columnwidth}
+      \[
+      \begin{split}
+        &\Lambda = (J B^{-1} J^{T})^{-1}\\
+        &\vec{\mu} = \bar{J}^{T} C \vec{\dot{q}} - \Lambda \vec{h}\\
+        &\vec{p} = \bar{J}^T \vec{G}\\
+        &\bar{J} = B^{-1} J^{T} \Lambda
+      \end{split}
+      \]
+    \end{column}
+  \end{columns}
+  %% The matrix 
+  %% which solves the problem of finding the joints velocities that produce a desired twist
+  %% while minimizing the manipulator's instantaneous kinetic energy.
+The equation (\ref{eq:operational_space_dyn}) can also be written in the form
+\[
+\bar{J}^{T} (B \vec{\ddot{q}} + C \vec{\dot{q}} + \vec{G}) = \vec{\gamma}
+\]
+resulting in 
+\[
+\vec{\gamma} = \bar{J}^{T} \vec{\tau}
+\]
+i.e. $\bar{J} = B^{-1} J^{T} \Lambda$ is a dynamically consistent generalized inverse of the Jacobian matrix
+\end{frame}
+
+\begin{frame}{Control of internal motions [Khatib, 1987]}
+ In order to control the undesired internal motions a command torque $\vec{\tau}$ of the form
+ \[
+ \vec{\tau} = J^{T} \vec{\gamma} + (I_7 - J^{T}\bar{J}^{T}) \vec{\gamma}_{0}
+ \]
+ can be used where $\vec{\gamma}_{0}$ is projected in the null space of $\bar{J}^{T}$ hence not affecting
+ the command wrench seen by the hand
+ \par
+ The final control law is
+ \[
+ \vec{\tau} = C \dot{\vec{q}} + \vec{G} + {}^{b}J^{T}_{S} ( B_A \vec{a} - B_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{S}) +
+ (I_7 - ({}^{b}J^{T}_{S}) ({}^{b} \bar{J}^{T}_{S})) \vec{\gamma}_{0}
+ \]
+where
+\[
+\prescript{b}{}{\bar{J}}_{S} = B^{-1} ({}^{b} J^{T}_{S}) ({}^{b} \Lambda_{S}) \quad 
+\prescript{b}{}{\Lambda}_{S} = ({}^{b} J_{S} B^{-1} ({}^{b} J^{T}_{S}))^{-1}
+\]
+\end{frame}
+
+\begin{frame}{Design of the null operational wrench command $\vec{\gamma}_{0}$}
+  To fix the orientation of the $5$-th link and
+  to regulate the altitude between the $4$-th link and the hand 
+  $\vec{\gamma}_0$ is chosen
+  \[
+  \vec{\gamma}_{0} = J_{im} ^{T} (K_p (\vec{x}_{im,des} - \vec{x}_{im} ) - K_d \vec{\dot{x}}_{im})
+  \]
+  \[
+  \vec{x}_{im} =
+  \begin{bmatrix}
+    {}^{b} x_{l4} & {}^{b} y_{l4} & {}^{b} z_{l4} & \psi_{l5} & \theta_{l5} & \phi_{l5}
+  \end{bmatrix}^{T} =
+  \begin{bmatrix}
+    \vec{p}^{T}_{l4} & \vec{\Phi}^{T}_{l5}
+  \end{bmatrix}^{T}
+  \]
+  \[
+  \begin{bmatrix}
+  \vec{\dot{p}}_{l4} \\
+  \vec{\dot{\Phi}}_{l5} \\
+  \end{bmatrix} =
+  J_{im} \vec{\dot{q}}
+  \]
+  \par
+  \[
+  K_p = \text{diag}(0, 0, k_{p,z}^{im}, 0, 0, k_{p, att}^{im})
+  \quad
+  K_d = k_{d}^{im} I_{6}
+  \]
+  \[
+  \vec{p}_{l4} =
+  \begin{bmatrix}
+    * & * & {}^{b} p_{ee_{z}} + off_z
+  \end{bmatrix}^{T}
+  \quad
+  \vec{\Phi}_{l5} =
+  \begin{bmatrix}
+    * & * & 0
+  \end{bmatrix}^{T}
+  \]
 \end{frame}
