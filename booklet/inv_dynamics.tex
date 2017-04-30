@@ -9,24 +9,25 @@ The development of the controller starts from the dynamic model of the 7-joint
 manipulator
 \begin{equation}\label{eq:joint_space_dyn}
   B(\vec{q}) \ddot{\vec{q}} + C(\vec{q}, \dot{\vec{q}}) \dot{\vec{q}} + \cancel{\vec{G}(\vec{q})} = \vec{\tau}
-  -\prescript{b}{}{J}^{T}_{F} \prescript{b}{}{\vec{w}}_{F}
+  -\prescript{b}{}{J}^{T}_{S} \prescript{b}{}{\vec{w}}_{S}
 \end{equation}
 
-where $\vec{w}_{F}$ is the wrench exerted by the end-effector on the environment with reference point in the centre
-of the wrist of the robot ($F$) and $J_{F}$ is the geometric Jacobian of the robot.
+where $\vec{w}_{S}$ is the wrench exerted by the hand on the environment
+with reference point in the centre
+of the sensor ($S$) and $J_{S}$ is the geometric Jacobian of the robot.
 The gravity term is canceled because it is handled internally by the robot itself.
 \par
 The first step towards the exact dynamics inversion is to cancel the Coriolis term
-$C \dot{\vec{q}}$ and the term containing the wrench $\vec{w}_{F}$ which is supposed to
+$C \dot{\vec{q}}$ and the term containing the wrench $\vec{w}_{S}$ which is supposed to
 be available as a feedback signal. The resulting control torque is then
 \[
-\vec{\tau} = C \dot{\vec{q}} + {}^{b}J^{T}_{F} ({}^b\vec{\gamma} + {}^b\vec{w}_{F})
+\vec{\tau} = C \dot{\vec{q}} + {}^{b}J^{T}_{S} ({}^b\vec{\gamma} + {}^b\vec{w}_{S})
 \]
 where an additional control wrench $\vec{\gamma}$ is introduced.
 Substituing the control torque and solving for the joints accelerations $\vec{\ddot{q}}$
 leads to
 \begin{equation}\label{eq:qddot}
-  \ddot{\vec{q}} = B^{-1} ({}^{b}J^{T}_{F}) {}^b\vec{\gamma}
+  \ddot{\vec{q}} = B^{-1} ({}^{b}J^{T}_{S}) {}^b\vec{\gamma}
 \end{equation}
 \par
 The link between the joint space description and the operational space description
@@ -68,7 +69,7 @@ using software libraries like KDL (Kinematics and Dynamics Library).
 \par
 By substituing equation (\ref{eq:qddot}) in equation (\ref{eq:ws_a}) one obtains
 \[
-\prescript{ws}{}{\ddot{\vec{x}}} = \underbrace{\prescript{ws}{}{J}_{A,E} \B^{-1} ({}^b J_{F}^T)}_{\Lambda_A^{-1}} {}^b \vec{\gamma} + {}^{ws} \ddot{J_{A,E}} \dot{\vec{q}}
+\prescript{ws}{}{\ddot{\vec{x}}} = \underbrace{\prescript{ws}{}{J}_{A,E} \B^{-1} ({}^b J_{S}^T)}_{\Lambda_A^{-1}} {}^b \vec{\gamma} + {}^{ws} \ddot{J_{A,E}} \dot{\vec{q}}
 \]
 where the kinetic psuedo-kinetic energy matrix $\Lambda_{A}$ was introduced. Multiplying both sides of the equation
 by $\Lambda_{A}$ leads to
@@ -86,7 +87,7 @@ resulting in
 where $\vec{a}_{cmd}$ represents the outer control expressed in equation (\ref{eq:final_a_cmd}).
 Taking into account the command wrench $\vec{\gamma}$ the final commanded torque is
 \begin{equation}\label{eq:torque_wo_null}
-  \vec{\tau} = C \dot{\vec{q}} + {}^{b}J^{T}_{F} ( B_A \vec{a} - B_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{F})
+  \vec{\tau} = C \dot{\vec{q}} + {}^{b}J^{T}_{S} ( B_A \vec{a} - B_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{S})
 \end{equation}
 
 \subsection{Control of redundant manipulators}
@@ -168,23 +169,23 @@ whole manipulator and the end-effector.
 Taking into account the development presented in this section the commanded torques $\vec{\tau}$
 in equation (\ref{eq:torque_wo_null}) are updated to
 \begin{equation}\label{eq:torqu_w_null_1}
-  \vec{\tau} = C \dot{\vec{q}} + {}^{b}J^{T}_{F} ( B_A \vec{a} - B_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{F}) +
-  (I_7 - ({}^{b}J^{T}_{F}) ({}^{b} \bar{J}^{T}_{F})) \vec{\gamma}_{0}
+  \vec{\tau} = C \dot{\vec{q}} + {}^{b}J^{T}_{S} ( \Lambda_A \vec{a} - \Lambda_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{S}) +
+  (I_7 - ({}^{b}J^{T}_{S}) ({}^{b} \bar{J}^{T}_{S})) \vec{\gamma}_{0}
 \end{equation}
 where
 \[
-\prescript{b}{}{\bar{J}}_{F} = B^{-1} ({}^{b} J^{T}_{F}) ({}^{b} \Lambda_{F})
+\prescript{b}{}{\bar{J}}_{S} = B^{-1} ({}^{b} J^{T}_{S}) ({}^{b} \Lambda_{S})
 \]
 and
 \[
-\prescript{b}{}{\Lambda}_{F} = ({}^{b} J_{F} B^{-1} ({}^{b} J^{T}_{F}))^{-1}
+\prescript{b}{}{\Lambda}_{S} = ({}^{b} J_{S} B^{-1} ({}^{b} J^{T}_{S}))^{-1}
 \]
 
 \subsubsection{Design of the null operational wrench command}
 Design of the control law assigned to the term $\vec{\gamma}_{0}$ was
 guided by the simulation of the task described in section \ref{sec:task_description}. Extensive simulations
 revealed that the uncontrolled internal motions of the robot, while not affecting the desired
-attitude of the end-effector, caused the $5$-th and $7$-th links to rotate cooperatively and reach
+attitude of the hand, caused the $5$-th and $7$-th links to rotate cooperatively and reach
 their limits soon. Another issue with internal motions is that they could cause, in some situations,
 collisions between the $4$-th link and the table which is part of the workspace of the robot.
 \par
@@ -215,15 +216,7 @@ J_{im} \vec{\dot{q}}
 \par
 The gains $K_p$ and $K_d$ and the desired state $\vec{x}_{im,des}$ were chosen as
 \[
-K_p =
-\begin{bmatrix}
-  0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & k_{p,z}^{im} & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & k_{p, att}^{im}\\
-\end{bmatrix}
+K_p = \text{diag}(0, 0, k_{p,z}^{im}, 0, 0, k_{p, att}^{im})
 \quad
 K_d = k_{d}^{im} I_{6}
 \]
@@ -238,9 +231,9 @@ K_d = k_{d}^{im} I_{6}
   * & * & 0\\
 \end{bmatrix}^{T}
 \]
-where ${}^{b} z_{ee}$ is the altitude of the end-effector with respect to the base of the robot
+where ${}^{b} z_{ee}$ is the altitude of the hand with respect to the base of the robot
 and $k_{p,z}^{im}$, $k_{att}^{im}$ and $k_{d}^{in}$ are suitable gains.
 Such a choice allows to fix the orientation of the $5$-th link to a value that is comfortable
 during the execution of task described in the section \ref{sec:task_description} and to regulate the altitude between the $4$-th link and
-the end-effector so as to avoid collisions between the elbow of the robot and the workspace.
+the hand so as to avoid collisions between the elbow of the robot and the workspace.
 \newpage
