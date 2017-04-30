@@ -1,18 +1,24 @@
-\begin{frame}
-  \frametitle{Approaching phase}
-  Before using HIC the robot is moved in a given position above the surface of the table
-  \begin{equation*}
-    B(\vec{q}) \ddot{\vec{q}} + C(\vec{q}, \dot{\vec{q}}) \dot{\vec{q}} + \cancel{\vec{G}(\vec{q})} = \vec{\tau}
-    \longrightarrow \ddot{\vec{q}} = \vec{a}
-  \end{equation*}
-  \begin{flalign*}
-    &\vec{\tau} = C(\vec{q}, \dot{\vec{q}}) \dot{\vec{q}} +  B(\vec{q}) \vec{a}\\
+\section{Approaching phase}
+\begin{frame}{Approaching phase}
+  Before using HIC the robot is moved in a given position above the surface of the table using a joint space inverse dynamics
+  to avoid singularity introduced by Euler ZYZ parametrization
+  \[
+  B(\vec{q}) \ddot{\vec{q}} + C(\vec{q}, \dot{\vec{q}}) \dot{\vec{q}} + \vec{G}(\vec{q}) = \vec{\tau}
+  \longrightarrow \ddot{\vec{q}} = \vec{a}
+  \]
+  \[
+  \begin{split}
+    &\vec{\tau} = C(\vec{q}, \dot{\vec{q}}) \dot{\vec{q}} + \vec{G}(\vec{q})  +  B(\vec{q}) \vec{a}\\
     &\vec{a} = \ddot{\vec{q}}_{des} + K_d(\dot{\vec{q}}_{des} - \dot{\vec{q}}) + K_p(\vec{q}_{des} - \vec{q})\\
-    &\vec{q}_{f} = FK^{-1}(\vec{x}_{des})
-  \end{flalign*}
-  \begin{flalign*}
+    &\vec{q}_{f} = FK^{-1}(\vec{x}_{des}, \vec{q}_{prev})
+  \end{split}
+  \]
+  where $\vec{q}_f$ is discarded whenever its component excedes the joints limits
+  \[
+  \begin{split}
     &q_{des, i}(t) = a_0 + a_1 t + a_2 t^2 + a_3 t^3 + a_4 t^4 + a_5 t^5\\
-    &q_{des, i}(0) = q_{f_{prev},i} \quad \dot{q}_{des, i}(0) = 0 \quad \ddot{q}_{des, i}(0) = 0\\
+    &q_{des, i}(0) = q_{prev,i} \quad \dot{q}_{des, i}(0) = 0 \quad \ddot{q}_{des, i}(0) = 0\\
     &q_{des, i}(t_f) = q_{f,i} \quad \dot{q}_{des, i}(t_f) = 0 \quad \ddot{q}_{des, i}(t_f) = 0
-  \end{flalign*}
+  \end{split}
+  \]
 \end{frame}
