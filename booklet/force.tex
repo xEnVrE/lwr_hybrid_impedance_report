@@ -9,7 +9,15 @@ coming from a common force/torque sensor and what are the main problems encounte
 \subsection{Newton-Euler equations}
 In order to understand what are the actual quantities measured by a force torque sensor it is useful
 to describe, by means of the Newton-Euler approach, the motion of a rigid body, attached to the
-sensor through a mounting plate, due to external forces and torques. The resulting equations are the following
+sensor through a mounting plate, due to external forces and torques.
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=1.2]{ft_sensor_object}
+  \caption{F/t sensor with hand attached \label{fig:ft_sensor_object}}
+\end{figure}
+
+
+The resulting equations are the following
 
 \begin{equation}
   \prescript{s}{}{ \vec{f}}_{s} = -\prescript{s}{}{ \vec{f}}_{pl} -\prescript{s}{}{ \vec{f}}_{c} -m \prescript{s}{}{ \vec{g}}
@@ -205,7 +213,17 @@ matrix $H_{60}$. The estimated parameters are the following:
       \centering
       \includegraphics[scale=0.5]{com}
       \caption{CoM estimation\label{fig:com_estimation}}
-    \end{subfigure} \\
+    \end{subfigure}
+  \end{tabular}
+  \caption{Estimation results}
+\end{table}
+It can be verified that
+\[
+\frac{||\hat{m}\hat{\vec{g}}_0||}{9.81} = 0.6270 \approx 0.6848 = \hat{m}
+\]
+as expected.
+\begin{table}[h]
+  \begin{tabular}{cc}
     \begin{subfigure}{0.5\textwidth}
       \centering
       \includegraphics[scale=0.5]{off_f}
@@ -219,9 +237,4 @@ matrix $H_{60}$. The estimated parameters are the following:
   \end{tabular}
   \caption{Estimation results}
 \end{table}
-It can be verified that
-\[
-\frac{||\hat{m}\hat{\vec{g}}_0||}{9.81} = 0.6270 \approx 0.6848 = \hat{m}
-\]
-as expected.
 \newpage
