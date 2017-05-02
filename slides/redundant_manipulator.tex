@@ -1,5 +1,5 @@
 \begin{frame}{Issues with internal motions}
-  In the case of the task described the Kuka LWR $4+$ is a kinetically redundant manipulator.
+  In the case of the task described the Kuka LWR $4+$ is a kinematically redundant manipulator.
   \par
   Extensive simulations revealed
   that the uncontrolled internal motions of the robot, while not affecting the
@@ -8,7 +8,7 @@
   is that they could cause, in some situations, collisions between the $4$-th
   link and the table which is part of the workspace of the robot.
   \par
-  These issues are solved use a \emph{dynamically consistent} generalized inverse of the Jacobian [Khatib, 1987]
+  These issues are solved using a \emph{dynamically consistent} generalized inverse of the Jacobian [Khatib, 1987]
 \end{frame}
   
 \begin{frame}{Control of internal motions [Khatib, 1987]}
@@ -61,7 +61,7 @@ i.e. $\bar{J} = B^{-1} J^{T} \Lambda$ is a dynamically consistent generalized in
  \par
  The final control law is
  \[
- \vec{\tau} = C \dot{\vec{q}} + \vec{G} + {}^{b}J^{T}_{S} ( B_A \vec{a} - B_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{S}) +
+ \vec{\tau} = C \dot{\vec{q}} + \vec{G} + {}^{b}J^{T}_{S} ( \Lambda_A \vec{a}_{cmd} - \Lambda_A {}^{ws} \dot{J_{A,E}} \dot{\vec{q}} + {}^b\vec{w}_{S}) +
  (I_7 - ({}^{b}J^{T}_{S}) ({}^{b} \bar{J}^{T}_{S})) \vec{\gamma}_{0}
  \]
 where
