@@ -1,9 +1,8 @@
-\begin{frame}
-  \frametitle{Software implementation}
-
+\section{Software implemenation}
+\begin{frame}{Some notes about implementation}
   \begin{itemize}
-  \item[-] ROS
-  \item[-] already existing (Centro Piaggio) KUKA LWR4+ software stack (model, FRI, KRL, ati sensor, ROS controllers)
+  \item[-] ROS based software
+  \item[-] already existing (Centro Piaggio) KUKA LWR4+ software stack (model, FRI, F/T sensor interface, ROS controllers)
   \item[-] built upon KinematicChainControllerBase (KDL facilities)
   \item[-] extends KinematicChainControllerBase by providing an Operational Space Inverse Dynamics \emph{abstract} controller
     \begin{itemize}
@@ -13,7 +12,5 @@
     \item[-] null projection available
     \end{itemize}
   \item[-] Hybrid Impedance Controller based on Inverse Dynamics Controller
-  \item[-] joint space inertia matrix from FRI made available
   \end{itemize}
-
 \end{frame}
