@@ -161,6 +161,59 @@ In the Table \ref{fig:banana} only the results of the dragging phase are shown.
 Although the force error is bounded between $\SI{-0.6}{N}$ and 
 $\SI{-0.25}{N}$ undesired spikes are present because of
 the vibrations due to the movement.
-
+\newpage
 \subsection{Experiment 3}
+In this experiment (Fig. \ref{fig:hand_ruler}) a ruler is dragged
+on a table while the contact force between the hand and the ruler is regulated.
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.46]{hand_ruler.png}
+  \caption{The hand while it drags the ruler. \label{fig:hand_ruler}}
+\end{figure}
+The object is dragged in $\SI{5}{s}$ for a distance of $\SI{15}{cm}$ and the requested force is about $\SI{3}{N}$.
+In the Tables \ref{fig:ruler1} and \ref{fig:ruler2} only the results of the dragging phase are shown.
+\begin{table}[h]
+  \begin{tabular}{cc}
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \includegraphics[scale=0.5]{ruler_z}
+      \caption{Reference and actual force. \label{fig:ruler_z}}
+    \end{subfigure}&
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \includegraphics[scale=0.5]{ruler_err_z}
+      \caption{Error. \label{fig:ruler_error_z}}
+    \end{subfigure}
+  \end{tabular}
+  \caption{Experiment 3, the hand drags a ruler.\\
+    $K_f = 2.5$ and $B_f = 45$.}\label{fig:ruler1}
+\end{table}
+\begin{table}[h]
+  \begin{tabular}{cc}
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \includegraphics[scale=0.5]{ruler_y}
+      \caption{Reference and actual trajectory. \label{fig:ruler_y}}
+    \end{subfigure}&
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \includegraphics[scale=0.5]{ruler_err_y}
+      \caption{Error. \label{fig:ruler_error_y}}
+    \end{subfigure}
+  \end{tabular}
+  \caption{Experiment 3, the hand drags a ruler.\\
+  $K_f = 2.5$ and $B_f = 45$.}\label{fig:ruler2}
+\end{table}
+\par
+Although the force error is bounded between $\SI{-0.6}{N}$ and 
+$\SI{0.6}{N}$ undesired spikes are present because of
+the vibrations due to the movement.
+\par
+After the ruler sticks out of the border of the table the hand is able to grasp
+it properly.
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.44]{hand_grasp_ruler.png}
+  \caption{The hand while it grasp the ruler. \label{fig:hand_grasp_ruler}}
+\end{figure}
 \newpage
