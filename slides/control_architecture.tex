@@ -1,27 +1,22 @@
 \section{Hybrid impedance control}
 
-\begin{frame}{Hybrid impedance control (HIC) [Anderson, Spong, 1988]}
-  \begin{itemize}
-  \item [-] hybrid force/position control
-    \begin{itemize}
-    \item[i.] allows to assign  \textcolor{dgreen}{different control strategies} to each cartesian DoF
-      intuitively via a selection matrix
-    \item[ii.] \textcolor{red}{no importance} to manipulator impedance as seen by the environment
-    \end{itemize}
-  \item [-] a more general concept of impedance
-    \begin{itemize}
-    \item[i.] not only a PD position controller with tuned apparent impedances
-    \item[ii.] operational space approach allows to obtain impedances regardless 
-      of the configuration of the manipulator
-    \item[iii.] also direct force control seen as a problem of matching a given ``environment impedance''
-      with the appropriate ``manipulator impedance''
-    \end{itemize}
-  \end{itemize}
+\begin{frame}{Hybrid impedance control [Anderson, Spong, 1988]}
+  The Hybrid Impedance Control approach features \alert{a more general concept of
+  impedance} than that used in typical PD position controllers with tuned
+  apparent impedances of the form
+  \[
+  (\ddot{\vec{x}}^{des} - \ddot{\vec{x}}) + K_{damping} (\dot{\vec{x}}^{des} - \dot{\vec{x}})
+  + K_{stifness}(\vec{x}^{des} - \vec{x}) = \vec{F}
+  \]
+  \par
+  It allows to synthesize for each DoF of the manipualator both a position or a \alert{direct
+    force} controller by matching a given ``environment impedance'' with the appropriate
+  ``manipulator impedance''
 \end{frame}
 
 \begin{frame}{HIC - Type of impedances}
   \centering
-  \includegraphics[scale=0.65]{type_of_impedances}
+  \includegraphics[scale=0.65]{type_of_impedances.png}
   \begin{itemize}
   \item[-] for each cartesian DoF the manipulator and the environment can be described using impedances $Z_m$ and $Z_e$
   \item[-] the environment is defined to be any element connected
@@ -49,7 +44,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{HIC - Duality principle for position control}
+\begin{frame}[shrink=10]{HIC - Duality principle for position control}
   Manipulator impedance chosen as the dual of the environment impedance in order to obtain zero
   steady state error to a step input
   \vskip0.1in
@@ -63,17 +58,24 @@
       \includegraphics[width=\columnwidth]{position_control_model}
     \end{column}
   \end{columns}
+  \par
   \[
-  e_{ss} \Big|_{F_{env} \equiv 0} = \lim_{s \to 0}(v - v_{des}) = \frac{-Z_e(0)}{Z_m(0) + Z_e(0)} = 0 \text{ as long as } Z_m(0) \neq 0
+  e_{ss} \Big|_{F_{env} \equiv 0} = \lim_{s \to 0}(v - v_{des}) = \frac{-Z_e(0)}{Z_m(0) + Z_e(0)} = 0
   \]
-  \begin{block}{Rule of thumb}
-    inertial environments are position controlled with a noninertial manipulator impedances
-  \end{block}
+  \[
+  \alert{\text{as long as } Z_m(0) \neq 0 \text{ and } Z_e(0) = 0}
+  \]
+  \par
+
+  \begin{exampleblock}{Rule of thumb}
+    inertial environments are position controlled with a noninertial manipulator impedance
+    (the actual value of $Z_e(0)$ \alert{should not be known})
+  \end{exampleblock}
 \end{frame}
 
 \begin{frame}[shrink=30]{HIC - Position controlled subsystem}
-  The electrical circuit can be seen as a control feedback scheme where $a$ is the ideal
-  acceleration of the DoF corresponding to the desired velocity $v_{des}$
+  The electrical circuit \alert{can be seen as a control feedback scheme where $a$ is the \alert outer loop
+  acceleration} corresponding to the desired velocity $v_{des}$
   \begin{columns}
     \begin{column}{0.4\textwidth}
       \begin{align*}
@@ -89,7 +91,7 @@
       \includegraphics[scale=0.8]{position_control_feedback}
     \end{column}
   \end{columns}
-  The acceleration can be written without derivatives
+  The acceleration can be written \alert{without derivatives}
   \begin{align*}
     &a = \frac{\mathrm{d}}{\mathrm{d}t} \left(v_{des} - \frac{F}{Ms + \tilde{Z}_m} \right) = \dot{v}_{des} - \frac{Fs}{Ms + \tilde{Z}_{m}} = \dot{v}_{des} - s v_1 \\
     &F = v_1 (Ms + \tilde{Z}_m) \quad v_1 = \frac{F - (v_{des} - v)\tilde{Z}_m}{Ms}\\
@@ -97,7 +99,7 @@
   \end{align*}
 \end{frame}
 
-\begin{frame}{HIC - Duality principle for force control}
+\begin{frame}[shrink=10]{HIC - Duality principle for force control}
   Manipulator impedance chosen as the dual of the environment impedance in order to obtain zero
   steady state error to a step input
   \vskip0.1in
@@ -112,16 +114,20 @@
     \end{column}
   \end{columns}
   \[
-  e_{ss} \Big|_{v_{env} \equiv 0} = \lim_{s \to 0}(F - F_{des}) = \frac{-Z_m(0)}{Z_m(0) + Z_e(0)} = 0 \text{ as long as } Z_m(0) < \infty
+  e_{ss} \Big|_{v_{env} \equiv 0} = \lim_{s \to 0}(F - F_{des}) = \frac{-Z_m(0)}{Z_m(0) + Z_e(0)} = 0 
   \]
-  \begin{block}{Rule of thumb}
-    capacitive environments are force controlled with noncapacitive manipulator impedances
-  \end{block}
+  \[
+  \alert{\text{as long as } Z_m(0) < \infty \text{ and } Z_e(0) \rightarrow \infty}
+  \]
+  \begin{exampleblock}{Rule of thumb}
+    capacitive environments are force controlled with a noncapacitive manipulator impedance
+    (the actual value of $Z_e(0)$ \alert{should not be known})
+  \end{exampleblock}
 \end{frame}
 
 \begin{frame}[shrink=30]{HIC - Force controlled subsystem}
-  The electrical circuit can be seen as a control feedback scheme where $a$ is the ideal
-  acceleration of the DoF corresponding to the desired force $F_{des}$
+  The electrical circuit \alert{can be seen as a control feedback scheme where $a$ is the outer loop
+  acceleration} of the DoF corresponding to the desired force $F_{des}$
   \begin{columns}
     \begin{column}{0.4\textwidth}
       \begin{align*}
@@ -137,7 +143,7 @@
       \includegraphics[scale=0.8]{force_control_feedback}
     \end{column}
   \end{columns}
-  The acceleration can be written without derivatives
+  The acceleration can be written \alert{without derivatives}
   \begin{align*}
     &a = \frac{\mathrm{d}}{\mathrm{d}t} \left(\frac{F - F_{des}}{Ms + \tilde{Z}_m} \right) = \left(\frac{s(F - F_{des})}{Ms + \tilde{Z}_m} \right)\\
     &vMs + v \tilde{Z}_m = F - F_{des}\\
@@ -184,7 +190,7 @@
 
 \begin{frame}{Notation}
   \begin{block}{Space state vector definition}
-    A natural choice for a basis in which the commanded positions and forces are expressed is $ws$
+    A natural choice for a basis in which the commanded positions and forces are \alert{expressed is $ws$}
     \[
     \prescript{ws}{}{\vec{x}} = 
     \begin{bmatrix}
@@ -205,7 +211,7 @@
 \end{frame}
 
 \begin{frame}{Control aims}
-  Suppose that the second derivative of the state can be chosen arbitrarily
+  \alert{Suppose} that the second derivative of the state can be chosen arbitrarily
   \[
   \prescript{ws}{}{\ddot{\vec{x}}} = \vec{a}_{cmd}
   \]
@@ -228,7 +234,7 @@
 \begin{frame}[shrink=30]{Resulting HIC based controller}
   \begin{block}{Position ($\prescript{ws}{}{r}_x$, ${}^{ws}r_y$)}
   \begin{itemize}
-  \item[-] inertial environment (manipulator moving a payload along given axis)
+  \item[-] inertial environment supposed, i.e., manipulator moving a payload along given axis
   \item[-] $Z_{m,p} = M_p s + \tilde{Z}_{m,p} = M_p s + B_p + \frac{K_p}{s} = s + B_p + \frac{K_p}{s} $
   \end{itemize}
   \[
@@ -240,7 +246,7 @@
   \end{block}
   \begin{block}{Attitude ($\psi$, $\theta$, $\phi$)}
     \begin{itemize}
-    \item[-] inertial environment (manipulator rotating a payload about given axis)
+    \item[-] inertial environment supposed, i.e., manipulator rotating a payload about given axis
     \item[-] $Z_{m,a} = M_a s + \tilde{Z}_{m,a} = M_a s + B_a + \frac{K_a}{s} = s + B_a + \frac{K_a}{s}$
     \end{itemize}
     \[ 
@@ -249,45 +255,11 @@
   \end{block}
   \begin{block}{Force (${}^{ws}F_z$)}
     \begin{itemize}
-    \item[-] capacitive environment
+    \item[-] capacitive environment supposed
     \item[-] $Z_{m,f} = M_f s + \tilde{Z}_{m,f} = M_f s + \tilde{B}_f = \frac{s}{K_f} + \frac{B_f}{K_f}$
     \end{itemize}
     \[
     \prescript{ws}{}{a}_{cmd,z} = - B_f \dot{r}_z + K_f(F_{z,des} - F_z)
     \]  
   \end{block}
-\end{frame}
-
-\begin{frame}{How to write $\vec{a}_{cmd}$ using a selection matrix $S$}
-  A selection matrix $S$ \alert{may} be used to separate the force-controlled 
-  and position-controlled \emph{reciprocal} subspaces
-  \begin{columns}
-    \begin{column}{0.6\textwidth}
-      \[  
-      \prescript{ws}{}{\vec{a}}_{cmd} = S 
-        \begin{bmatrix}
-          a_{cmd,x} \\
-          a_{cmd,y} \\
-          * \\
-          \vec{a}_{cmd,\Phi}
-        \end{bmatrix} + (I - S) 
-        \begin{bmatrix}        
-          * \\ * \\ a_{cmd,z} \\ * \\ * \\ *
-        \end{bmatrix}
-      \]
-    \end{column}
-    \begin{column}{0.35\columnwidth}
-      \[
-      S =
-        \begin {bmatrix}
-          1 & 0 & 0 & 0 & 0 & 0\\
-          0 & 1 & 0 & 0 & 0 & 0\\
-          0 & 0 & 0 & 0 & 0 & 0\\
-          0 & 0 & 0 & 1 & 0 & 0\\
-          0 & 0 & 0 & 0 & 1 & 0\\
-          0 & 0 & 0 & 0 & 0 & 1\\
-        \end {bmatrix}
-      \]
-    \end{column}
-  \end{columns}
 \end{frame}

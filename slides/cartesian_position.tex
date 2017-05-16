@@ -1,7 +1,7 @@
 \section{Approaching phase}
 \begin{frame}[shrink=10]{Approaching phase}
   Before using HIC the robot is moved in a given position above the surface of the table using a joint space inverse dynamics
-  to avoid singularity introduced by Euler ZYZ parametrization
+  \alert{to avoid singularity} introduced by Euler ZYZ parametrization
   \[
   B(\vec{q}) \ddot{\vec{q}} + C(\vec{q}, \dot{\vec{q}}) \dot{\vec{q}} + \vec{G}(\vec{q}) = \vec{\tau}
   \longrightarrow \ddot{\vec{q}} = \vec{a}
@@ -13,7 +13,7 @@
     &\vec{q}_{f} = FK^{-1}(\vec{x}_{des})
   \end{split}
   \]
-  where $\vec{q}_f$ is discarded whenever its component excedes the joints limits
+  where $\vec{q}_f$ is \alert{discarded whenever its component exceeds the joints limits}
   \[
   \begin{split}
     &q_{des, i}(t) = a_0 + a_1 t + a_2 t^2 + a_3 t^3 + a_4 t^4 + a_5 t^5\\

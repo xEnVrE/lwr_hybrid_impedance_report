@@ -73,3 +73,30 @@
     at the same time to regulate the contact force using a force feedback signal.
   \end{exampleblock}
 \end{frame}
+
+\begin{frame}{Control architecture}
+  The hybrid force position control was obtained using the \alert{Hybrid Impedance Approach (HIC)}
+  proposed by Anderson and Spong in the $1988$.
+  \par 
+  This approach requires the existence of an \alert{inverse dynamics} control \alert{inner} loop
+  to cancel the nonlinearities of the manipulator 
+  \includegraphics[width=\columnwidth]{control_arch}
+  \par
+  The inner loop applied to the manipulator results in a double integrator system
+  $\ddot{\vec{x}} = \vec{a}$ where $\vec{x}$ is a Cartesian description of the end-effector
+  and $\vec{a}$ is chosen using the HIC approach.
+\end{frame}
+
+\begin{frame}{Contents}
+  The contents presented are
+  \begin{itemize}
+  \item[-] the HIC approach
+  \item[-] the development of a HIC based outer control loop
+  \item[-] the inverse dynamics inner loop
+  \item[-] how to correctly use a force torque sensor that is required to close the outer loop
+  \item[-] the results obtained in simulation and in a real scenario
+  \item[-] notes about the software implementation
+  \item[-] future works
+  \end{itemize}
+\end{frame}
+

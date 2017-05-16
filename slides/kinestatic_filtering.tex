@@ -1,3 +1,39 @@
+\section{Appendix: Kinestatic Filtering}
+
+\begin{frame}{How to write $\vec{a}_{cmd}$ using a selection matrix $S$}
+  A selection matrix $S$ \alert{may} be used to separate the force-controlled 
+  and position-controlled \emph{reciprocal} subspaces
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      \[  
+      \prescript{ws}{}{\vec{a}}_{cmd} = S 
+        \begin{bmatrix}
+          a_{cmd,x} \\
+          a_{cmd,y} \\
+          * \\
+          \vec{a}_{cmd,\Phi}
+        \end{bmatrix} + (I - S) 
+        \begin{bmatrix}        
+          * \\ * \\ a_{cmd,z} \\ * \\ * \\ *
+        \end{bmatrix}
+      \]
+    \end{column}
+    \begin{column}{0.35\columnwidth}
+      \[
+      S =
+        \begin {bmatrix}
+          1 & 0 & 0 & 0 & 0 & 0\\
+          0 & 1 & 0 & 0 & 0 & 0\\
+          0 & 0 & 0 & 0 & 0 & 0\\
+          0 & 0 & 0 & 1 & 0 & 0\\
+          0 & 0 & 0 & 0 & 1 & 0\\
+          0 & 0 & 0 & 0 & 0 & 1\\
+        \end {bmatrix}
+      \]
+    \end{column}
+  \end{columns}
+\end{frame}
+
 \begin{frame}{A different interpretation of the selection matrix}
   Position controlled and force controlled subspaces can be seen in terms of
   \emph{natural} and \emph{artificial} constraints:
