@@ -1,7 +1,7 @@
 \section{Measure of the contact forces and torques}
 In the previous sections the hybrid force-position control architecture was described
 and the assumption was made that the wrench $\vec{w}_{S}$ (see eq. \ref{eq:joint_space_dyn})
-exerted by the hand on the environment was available as a feedback signal.
+that the environment exerts on the hand was available as a feedback signal.
 \par
 In this section it is explained how such a wrench can be obtained starting from the \emph{raw} signal
 coming from a common force/torque sensor and what are the main problems encountered in doing that.
@@ -46,7 +46,7 @@ $\vec{\omega}$ is the angular velocity of the rigid body and
 $\vec{\alpha}$ is the angular acceleration of the rigid body.
 It should be noted that the wrench $\vec{w}_{S}$  is given by
 \[
-\vec{w}_{S} = -
+\vec{w}_{S} =
 \begin{bmatrix}
   \vec{f}_{c}\\
   \vec{\tau}_{c} +\tilde{\vec{p}}_{c} \vec{f}_{c}\\
