@@ -9,7 +9,7 @@
   + K_{stifness}(\vec{x}^{des} - \vec{x}) = \vec{F}
   \]
   \par
-  It allows to synthesize for each DoF of the manipualator both a position or a \alert{direct
+  It allows to synthesize for each DoF of the manipulator both a position or a \alert{direct
     force} controller by matching a given ``environment impedance'' with the appropriate
   ``manipulator impedance''
 \end{frame}
@@ -83,7 +83,7 @@
         &v_1 = \frac{F}{Z_m}\\ 
         &F = Z_e v + F_{env}\\
         &a = \dot{v} = \frac{\mathrm{d}}{\mathrm{d}t} \left(v_{des} - \frac{F}{Z_m} \right)\\
-        &Z_m = M s + \tilde{Z}_m\\
+        &Z_m = M s + \tilde{Z}_m \enspace \text{ with } \tilde{Z}_m \text{ strictly proper}\\
       \end{align*}
     \end{column}
     \begin{column}{0.5\textwidth}
@@ -135,7 +135,7 @@
         &v = \frac{F - F_{des}}{Z_m}\\
         &F = Z_e(v + v_{env})\\
         &a = \dot{v} = \frac{\mathrm{d}}{\mathrm{d}t} \left(\frac{F - F_{des}}{Z_m} \right)\\
-        &Z_m = M s + \tilde{Z}_m\\
+        &Z_m = M s + \tilde{Z}_m \enspace \text{ with } \tilde{Z}_m \text{ strictly proper}\\
       \end{align*}
     \end{column}
     \begin{column}{0.5\textwidth}
