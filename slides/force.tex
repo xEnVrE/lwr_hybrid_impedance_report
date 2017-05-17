@@ -51,11 +51,11 @@
   Offsets $\vec{f}_{sw,off}$, $\vec{\tau}_{sw,off}$ are set when the f/t sensor is calibrated such that
   \[
   \vec{f}_{m,0} = \vec{\tau}_{m,0} = \vec{0}
-  \footnote[frame]{The zero subscript represents the calbration condition performed
-    when the manipulator is still}
+  \footnote[frame]{The zero subscript represents the calibration condition performed
+    when the manipulator is still, i.e. $\vec{a}_{cm} = \vec{0}$}
   \]
   \[
-  \vec{f}_{sw,off} = \vec{f}_{s,0} = -\vec{\tau}_{pl} -m \prescript{s}{}{ \vec{g}}_{0}
+  \vec{f}_{sw,off} = \vec{f}_{s,0} = -\vec{f}_{pl} -m \prescript{s}{}{ \vec{g}}_{0}
   \]
   \[
   \vec{\tau}_{sw,off} = \vec{\tau}_{s,0} = -\vec{\tau}_{pl} + \prescript{s}{}{ \tilde{\vec{g}}}_{0} m\vec{c}
@@ -79,7 +79,7 @@
   \vec{\tau}_{meas} = \vec{\tau}_{c} + \tilde{\vec{p}}_{c}  \vec{f}_{c}
   - \tilde{\vec{g}} \alert{m\vec{c}} + \alert{\prescript{s}{}{ \tilde{\vec{g}}}_{0} m\vec{c}} +  \tilde{\vec{a}}_{cm} \alert{m  \vec{c}}
   \]
-  The estimation is obtained from $n$ measurements collected when the manipulator assumes a static pose
+  The estimation is obtained from $n$ measurements collected when the manipulator assumes a \alert{static} pose, i.e. $\vec{a}_{cm} = \vec{0}$
   \[
   \begin{bmatrix}
     \vec{f}_{meas} \\
